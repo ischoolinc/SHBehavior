@@ -1,0 +1,58 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Campus.DocumentValidator;
+using K12.Data;
+
+namespace SHSchool.Behavior
+{
+    class StudentNumberValidator : IFieldValidator
+    {
+        Dictionary<string, List<StudentRecord>> StudentDic = new Dictionary<string, List<StudentRecord>>();
+        public StudentNumberValidator()
+        {
+            foreach (StudentRecord student in Student.SelectAll())
+            {
+                if (!StudentDic.ContainsKey(student.StudentNumber))
+                {
+                    StudentDic.Add(student.StudentNumber, new List<StudentRecord>());
+                }
+                StudentDic[student.StudentNumber].Add(student);
+            }
+        }
+        #region IFieldValidator 成員
+
+        //自動修正
+        public string Correct(string Value)
+        {
+            return Value;
+        }
+        //回傳驗證訊息
+        public string ToString(string template)
+        {
+            return template;
+        }
+
+        public bool Validate(string Value)
+        {
+            if (StudentDic.ContainsKey(Value)) //包含此學號
+            {
+                if (StudentDic[Value].Count == 1) //一名學生ok
+                {
+                    return true;
+                }
+                else // 多名學生亦為錯誤
+                {
+                    return false;
+                }
+            }
+            else //不包含此學號
+            {
+                return false;
+            }
+        }
+
+        #endregion
+    }
+}
