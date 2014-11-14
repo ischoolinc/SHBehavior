@@ -21,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\Documents and Settings\Dylan.Huang\桌面\系統\FiscaAE高中開發2\addmodules\開發模組\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -97,6 +97,11 @@
       <HintPath>..\..\..\..\..\Documents and Settings\Dylan.Huang\桌面\系統\FiscaAE高中開發2\modules\SHSchoolLoader_Beta\SmartSchool.Customization.Data.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SmartSchool.ePaper, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Library\SmartSchool.ePaper.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="SmartSchool.ErrorReporting">
       <HintPath>..\..\..\..\..\Documents and Settings\Dylan.Huang\桌面\系統\FiscaAE高中開發2\modules\SHSchoolLoader_Beta\SmartSchool.ErrorReporting.dll</HintPath>
       <Private>False</Private>
@@ -161,6 +166,52 @@
     <None Include="Resources\日常生活記錄表_範本_1.doc" />
     <None Include="Resources\日常生活記錄表_範本_2.doc" />
     <None Include="Resources\日常生活記錄表_範本_3.doc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Library\Aspose.Words.dll" />
+    <Content Include="Library\Aspose.Words.xml" />
+    <Content Include="Library\Campus.Configuration.dll" />
+    <Content Include="Library\Campus.Configuration.pdb" />
+    <Content Include="Library\DevComponents.DotNetBar2.dll" />
+    <Content Include="Library\FISCA.Data.dll" />
+    <Content Include="Library\FISCA.Data.pdb" />
+    <Content Include="Library\FISCA.Data.xml" />
+    <Content Include="Library\FISCA.dll" />
+    <Content Include="Library\FISCA.DSAUtil.dll" />
+    <Content Include="Library\FISCA.DSAUtil.pdb" />
+    <Content Include="Library\FISCA.DSAUtil.xml" />
+    <Content Include="Library\FISCA.pdb" />
+    <Content Include="Library\FISCA.Permission.dll" />
+    <Content Include="Library\FISCA.Permission.pdb" />
+    <Content Include="Library\FISCA.Permission.xml" />
+    <Content Include="Library\FISCA.Presentation.dll" />
+    <Content Include="Library\FISCA.Presentation.pdb" />
+    <Content Include="Library\FISCA.Presentation.xml" />
+    <Content Include="Library\FISCA.UDT.dll" />
+    <Content Include="Library\FISCA.UDT.pdb" />
+    <Content Include="Library\FISCA.UDT.xml" />
+    <Content Include="Library\K12.BusinessLogic.dll" />
+    <Content Include="Library\K12.BusinessLogic.pdb" />
+    <Content Include="Library\K12.BusinessLogic.xml" />
+    <Content Include="Library\K12.Data.dll" />
+    <Content Include="Library\K12.Data.pdb" />
+    <Content Include="Library\K12.Data.xml" />
+    <Content Include="Library\K12.Presentation.dll" />
+    <Content Include="Library\K12.Presentation.xml" />
+    <Content Include="Library\SHSchool.Data.dll" />
+    <Content Include="Library\SHSchool.Data.pdb" />
+    <Content Include="Library\SHSchool.Data.xml" />
+    <Content Include="Library\SmartSchool.Common.dll" />
+    <Content Include="Library\SmartSchool.Common.pdb" />
+    <Content Include="Library\SmartSchool.Common.xml" />
+    <Content Include="Library\SmartSchool.Customization.Data.dll" />
+    <Content Include="Library\SmartSchool.Customization.Data.pdb" />
+    <Content Include="Library\SmartSchool.Customization.Data.xml" />
+    <Content Include="Library\SmartSchool.ePaper.dll" />
+    <Content Include="Library\SmartSchool.ePaper.xml" />
+    <Content Include="Library\SmartSchool.ErrorReporting.dll" />
+    <Content Include="Library\SmartSchool.ErrorReporting.pdb" />
+    <Content Include="Library\SmartSchool.ErrorReporting.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

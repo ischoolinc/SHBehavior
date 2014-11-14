@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Xml;
 using Campus.Configuration;
 using Aspose.Words;
+using SmartSchool.ePaper;
 
 namespace SHSchool.DailyManifestation
 {
@@ -43,6 +44,13 @@ namespace SHSchool.DailyManifestation
 
         int SuperBehaviorIndex1 = 5;
         int SuperBehaviorIndex2 = 13;
+
+        bool PrintUpdateStudentFile = false;
+
+        /// <summary>
+        /// 學生電子報表
+        /// </summary>
+        SmartSchool.ePaper.ElectronicPaper paperForStudent { get; set; }
 
         List<string> absenceList;
 
@@ -77,6 +85,7 @@ namespace SHSchool.DailyManifestation
             SetNameIndex();
 
             SingeFile = cbSingeFile.Checked;
+            PrintUpdateStudentFile = checkBoxX1.Checked;
 
             BGW.RunWorkerAsync();
         }
@@ -86,6 +95,8 @@ namespace SHSchool.DailyManifestation
         /// </summary>
         void BGW_DoWork(object sender, DoWorkEventArgs e)
         {
+             paperForStudent = new SmartSchool.ePaper.ElectronicPaper(School.DefaultSchoolYear + "學生日常表現總表", School.DefaultSchoolYear, School.DefaultSemester, SmartSchool.ePaper.ViewerType.Student);
+
             #region 設定檔
 
             cd = Campus.Configuration.Config.User[ConfigName];
@@ -170,6 +181,11 @@ namespace SHSchool.DailyManifestation
                 {
                     Document PageOne = SetDocument(student);
 
+                    //電子報表
+                    MemoryStream stream = new MemoryStream();
+                    PageOne.Save(stream, SaveFormat.Doc);
+                    paperForStudent.Append(new PaperItem(PaperFormat.Office2003Doc, stream, student));
+
                     if (!DocDic.ContainsKey(student))
                     {
                         DocDic.Add(student, PageOne);
@@ -191,6 +207,11 @@ namespace SHSchool.DailyManifestation
                 {
                     Document PageOne = SetDocument(student);
 
+                    //電子報表
+                    MemoryStream stream = new MemoryStream();
+                    PageOne.Save(stream, SaveFormat.Doc);
+                    paperForStudent.Append(new PaperItem(PaperFormat.Office2003Doc, stream, student));
+
                     _doc.Sections.Add(_doc.ImportNode(PageOne.FirstSection, true));
                 }
 
@@ -198,6 +219,10 @@ namespace SHSchool.DailyManifestation
 
                 #endregion
             }
+
+            //如果有打勾則上傳電子報表
+            if (PrintUpdateStudentFile)
+                 SmartSchool.ePaper.DispatcherProvider.Dispatch(paperForStudent);
         }
 
         /// <summary>
@@ -672,13 +697,13 @@ namespace SHSchool.DailyManifestation
                 try
                 {
                     FolderBrowserDialog fbd = new FolderBrowserDialog();
-                    fbd.Description = "請選擇儲存位置";
+                    fbd.Description = "請選擇學生日常表現總表檔案儲存位置\n規格為(學號_身分證號_班級_座號_姓名)";
                     fbd.ShowNewFolderButton = true;
 
                     if (fbd.ShowDialog() == DialogResult.Cancel)
                     {
-                        FISCA.Presentation.Controls.MsgBox.Show("檔案未儲存");
-                        return;
+                         MsgBox.Show("已取消存檔!!");
+                         return;
                     }
 
                     //學號 報表名稱 學生姓名
@@ -700,6 +725,7 @@ namespace SHSchool.DailyManifestation
                             StringBuilder sb = new StringBuilder();
                             sb.Append(fbd.SelectedPath + "\\");
                             sb.Append(obj.StudentRecord.StudentNumber + "_");
+                            sb.Append(obj.StudentRecord.IDNumber + "_");
                             sb.Append((obj.StudentRecord.Class != null ? obj.StudentRecord.Class.Name : "") + "_");
                             sb.Append((obj.StudentRecord.SeatNo.HasValue ? "" + obj.StudentRecord.SeatNo.Value : "") + "_");
                             sb.Append(obj.StudentRecord.Name + ".doc");
@@ -749,7 +775,7 @@ namespace SHSchool.DailyManifestation
                     }
                     else
                     {
-                        FISCA.Presentation.Controls.MsgBox.Show("檔案未儲存");
+                        FISCA.Presentation.Controls.MsgBox.Show("已取消存檔");
                         return;
                     }
                 }
