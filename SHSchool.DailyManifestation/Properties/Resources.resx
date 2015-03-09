@@ -119,12 +119,12 @@
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="日常生活記錄表_範本_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\日常生活記錄表_範本_1.doc;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Resources\日常生活記錄表_範本_1.docx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="日常生活記錄表_範本_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\日常生活記錄表_範本_2.doc;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Resources\日常生活記錄表_範本_2.docx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="日常生活記錄表_範本_3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\日常生活記錄表_範本_3.doc;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Resources\日常生活記錄表_範本_3.docx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

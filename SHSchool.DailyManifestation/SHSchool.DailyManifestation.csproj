@@ -163,11 +163,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\日常生活記錄表_範本_1.doc" />
-    <None Include="Resources\日常生活記錄表_範本_2.doc" />
-    <None Include="Resources\日常生活記錄表_範本_3.doc" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Library\Aspose.Words_201402.dll" />
     <Content Include="Library\Aspose.Words_201402.xml" />
     <Content Include="Library\Campus.Configuration.dll" />
@@ -212,6 +207,11 @@
     <Content Include="Library\SmartSchool.ErrorReporting.dll" />
     <Content Include="Library\SmartSchool.ErrorReporting.pdb" />
     <Content Include="Library\SmartSchool.ErrorReporting.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\日常生活記錄表_範本_1.docx" />
+    <None Include="Resources\日常生活記錄表_範本_2.docx" />
+    <None Include="Resources\日常生活記錄表_範本_3.docx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
