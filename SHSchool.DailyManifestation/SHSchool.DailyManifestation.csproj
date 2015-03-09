@@ -35,9 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Aspose.Words, Version=4.4.1.0, Culture=neutral, PublicKeyToken=716fcc553a201e56">
+    <Reference Include="Aspose.Words_201402, Version=14.1.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Documents and Settings\Dylan.Huang\桌面\系統\FiscaAE高中開發2\modules\Campus\Aspose.Words.dll</HintPath>
+      <HintPath>Library\Aspose.Words_201402.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Campus.Configuration">
@@ -168,8 +168,8 @@
     <None Include="Resources\日常生活記錄表_範本_3.doc" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Library\Aspose.Words.dll" />
-    <Content Include="Library\Aspose.Words.xml" />
+    <Content Include="Library\Aspose.Words_201402.dll" />
+    <Content Include="Library\Aspose.Words_201402.xml" />
     <Content Include="Library\Campus.Configuration.dll" />
     <Content Include="Library\Campus.Configuration.pdb" />
     <Content Include="Library\DevComponents.DotNetBar2.dll" />

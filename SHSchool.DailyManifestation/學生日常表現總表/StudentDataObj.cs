@@ -97,7 +97,7 @@ namespace SHSchool.DailyManifestation
         public Dictionary<string, Dictionary<string, string>> DicAsbs = new Dictionary<string, Dictionary<string, string>>();
 
         /// <summary>
-        /// 統計資料,學年度學期,假別:內容
+        /// 獎懲統計資料
         /// </summary>
         public Dictionary<string, Dictionary<string, string>> DicMeritDemerit = new Dictionary<string, Dictionary<string, string>>();
 

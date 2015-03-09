@@ -13,8 +13,9 @@ using System.IO;
 using System.Diagnostics;
 using System.Xml;
 using Campus.Configuration;
-using Aspose.Words;
 using SmartSchool.ePaper;
+using Aspose.Words.Tables;
+using Aspose.Words;
 
 namespace SHSchool.DailyManifestation
 {
@@ -95,7 +96,7 @@ namespace SHSchool.DailyManifestation
         /// </summary>
         void BGW_DoWork(object sender, DoWorkEventArgs e)
         {
-             paperForStudent = new SmartSchool.ePaper.ElectronicPaper(School.DefaultSchoolYear + "學生日常表現總表", School.DefaultSchoolYear, School.DefaultSemester, SmartSchool.ePaper.ViewerType.Student);
+            paperForStudent = new SmartSchool.ePaper.ElectronicPaper(School.DefaultSchoolYear + "學生日常表現總表", School.DefaultSchoolYear, School.DefaultSemester, SmartSchool.ePaper.ViewerType.Student);
 
             #region 設定檔
 
@@ -222,7 +223,7 @@ namespace SHSchool.DailyManifestation
 
             //如果有打勾則上傳電子報表
             if (PrintUpdateStudentFile)
-                 SmartSchool.ePaper.DispatcherProvider.Dispatch(paperForStudent);
+                SmartSchool.ePaper.DispatcherProvider.Dispatch(paperForStudent);
         }
 
         /// <summary>
@@ -348,6 +349,9 @@ namespace SHSchool.DailyManifestation
 
             builder.MoveToMergeField("獎2");
             SetRowCount("獎懲資料欄1", (Cell)builder.CurrentParagraph.ParentNode, obj.DicMeritDemerit.Count);
+
+            builder.MoveToMergeField("細2");
+            SetRowCount("獎懲明細欄1", (Cell)builder.CurrentParagraph.ParentNode, obj.ListMerit.Count + obj.ListDeMerit.Count);
 
             #endregion
 
@@ -588,65 +592,113 @@ namespace SHSchool.DailyManifestation
                     break;
                 MeritDemeritCell2 = Nextrow.FirstCell; //第一格
             }
-            //builder.MoveToMergeField("獎");
-            //Cell MeritDemeritCell = (Cell)builder.CurrentParagraph.ParentNode;
 
-            //foreach (string moralScore in obj.SummaryDic.Keys)
-            //{
-            //    //填入學期
-            //    Write(MeritDemeritCell, moralScore);
-
-            //    //Cell
-            //    int index = GetSummaryIndex("大功");
-            //    Cell MeritDemerit = GetMoveRightCell(MeritDemeritCell, index);
-            //    string MeritA = obj.SummaryDic[moralScore]["大功"];
-            //    if (MeritA != "0")
-            //        Write(MeritDemerit, MeritA);
-
-            //    index = GetSummaryIndex("小功");
-            //    MeritDemerit = GetMoveRightCell(MeritDemeritCell, index);
-            //    string MeritB = obj.SummaryDic[moralScore]["小功"];
-            //    if (MeritB != "0")
-            //        Write(MeritDemerit, MeritB);
-
-            //    index = GetSummaryIndex("嘉獎");
-            //    MeritDemerit = GetMoveRightCell(MeritDemeritCell, index);
-            //    string MeritC = obj.SummaryDic[moralScore]["嘉獎"];
-            //    if (MeritC != "0")
-            //        Write(MeritDemerit, MeritC);
-
-            //    index = GetSummaryIndex("大過");
-            //    MeritDemerit = GetMoveRightCell(MeritDemeritCell, index);
-            //    string DemeritA = obj.SummaryDic[moralScore]["大過"];
-            //    if (DemeritA != "0")
-            //        Write(MeritDemerit, DemeritA);
-
-            //    index = GetSummaryIndex("小過");
-            //    MeritDemerit = GetMoveRightCell(MeritDemeritCell, index);
-            //    string DemeritB = obj.SummaryDic[moralScore]["小過"];
-            //    if (DemeritB != "0")
-            //        Write(MeritDemerit, DemeritB);
-
-            //    index = GetSummaryIndex("警告");
-            //    MeritDemerit = GetMoveRightCell(MeritDemeritCell, index);
-            //    string DemeritC = obj.SummaryDic[moralScore]["警告"];
-            //    if (DemeritC != "0")
-            //        Write(MeritDemerit, DemeritC);
-
-            //    Row Nextrow = MeritDemeritCell.ParentRow.NextSibling as Row; //取得下一個Row
-            //    if (Nextrow == null)
-            //        break;
-            //    MeritDemeritCell = Nextrow.FirstCell; //第一格Cell
-            //    if (MeritDemeritCell == null)
-            //        break;
-
-            //}
 
             #endregion
+
+            #region 獎懲(明細部份)
+
+            Cell meritRCell = DicBack["獎懲明細欄1"];
+
+            foreach (MeritRecord record in obj.ListMerit)
+            {
+                //填入學年期
+                Write(meritRCell, record.SchoolYear.ToString() + "/" + record.Semester.ToString());
+                meritRCell = GetMoveRightCell(meritRCell, 1);
+
+                //填入日期
+                Write(meritRCell, record.OccurDate.ToShortDateString());
+                meritRCell = GetMoveRightCell(meritRCell, 1);
+
+                //填入獎懲支數
+                Write(meritRCell, GetMeTxt(record));
+                meritRCell = GetMoveRightCell(meritRCell, 1);
+
+                //填入獎懲支數
+                Write(meritRCell, record.Reason);
+
+                Row Nextrow = meritRCell.ParentRow.NextSibling as Row; //取得下一行
+                if (Nextrow == null)
+                    break;
+                meritRCell = Nextrow.FirstCell; //第一格
+            }
+
+            foreach (DemeritRecord record in obj.ListDeMerit)
+            {
+                if (record.MeritFlag == "2") //留查不顯示
+                    continue;
+
+                if (record.Cleared =="是") //留查不顯示
+                    continue;
+
+                //填入學年期
+                Write(meritRCell, record.SchoolYear.ToString() + "/" + record.Semester.ToString());
+                meritRCell = GetMoveRightCell(meritRCell, 1);
+
+                //填入日期
+                Write(meritRCell, record.OccurDate.ToShortDateString());
+                meritRCell = GetMoveRightCell(meritRCell, 1);
+
+                //填入獎懲支數
+                Write(meritRCell, GetDemTxt(record));
+                meritRCell = GetMoveRightCell(meritRCell, 1);
+
+                //填入獎懲支數
+                Write(meritRCell, record.Reason);
+
+                Row Nextrow = meritRCell.ParentRow.NextSibling as Row; //取得下一行
+                if (Nextrow == null)
+                    break;
+                meritRCell = Nextrow.FirstCell; //第一格
+            }
+
+            #endregion
+
 
             return PageOne;
 
             #endregion
+        }
+
+        private string GetMeTxt(MeritRecord record)
+        {
+            string txt = "";
+            if (record.MeritA.HasValue && record.MeritA.Value > 0)
+            {
+                txt += "大功：" + record.MeritA.Value.ToString() + "　";
+            }
+
+            if (record.MeritB.HasValue && record.MeritB.Value > 0)
+            {
+                txt += "小功：" + record.MeritB.Value.ToString() + "　";
+            }
+
+            if (record.MeritC.HasValue && record.MeritC.Value > 0)
+            {
+                txt += "嘉獎：" + record.MeritC.Value.ToString() + "　";
+            }
+            return txt;
+        }
+
+        private string GetDemTxt(DemeritRecord record)
+        {
+            string txt = "";
+            if (record.DemeritA.HasValue && record.DemeritA.Value > 0)
+            {
+                txt += "大過：" + record.DemeritA.Value.ToString() + "　";
+            }
+
+            if (record.DemeritB.HasValue && record.DemeritB.Value > 0)
+            {
+                txt += "小過：" + record.DemeritB.Value.ToString() + "　";
+            }
+
+            if (record.DemeritC.HasValue && record.DemeritC.Value > 0)
+            {
+                txt += "警告：" + record.DemeritC.Value.ToString() + "　";
+            }
+
+            return txt;
         }
 
         /// <summary>
@@ -702,8 +754,8 @@ namespace SHSchool.DailyManifestation
 
                     if (fbd.ShowDialog() == DialogResult.Cancel)
                     {
-                         MsgBox.Show("已取消存檔!!");
-                         return;
+                        MsgBox.Show("已取消存檔!!");
+                        return;
                     }
 
                     //學號 報表名稱 學生姓名
@@ -728,7 +780,7 @@ namespace SHSchool.DailyManifestation
                             sb.Append(obj.StudentRecord.IDNumber + "_");
                             sb.Append((obj.StudentRecord.Class != null ? obj.StudentRecord.Class.Name : "") + "_");
                             sb.Append((obj.StudentRecord.SeatNo.HasValue ? "" + obj.StudentRecord.SeatNo.Value : "") + "_");
-                            sb.Append(obj.StudentRecord.Name + ".doc");
+                            sb.Append(obj.StudentRecord.Name + ".docx");
                             if (!dic.ContainsKey(sb.ToString()))
                             {
                                 dic.Add(sb.ToString(), inResult);
@@ -764,7 +816,7 @@ namespace SHSchool.DailyManifestation
                 {
                     SaveFileDialog SaveFileDialog1 = new SaveFileDialog();
 
-                    SaveFileDialog1.Filter = "Word (*.doc)|*.doc|所有檔案 (*.*)|*.*";
+                    SaveFileDialog1.Filter = "Word (*.docx)|*.docx|所有檔案 (*.*)|*.*";
                     SaveFileDialog1.FileName = "學生日常表現總表";
 
                     if (SaveFileDialog1.ShowDialog() == DialogResult.OK)
@@ -839,11 +891,6 @@ namespace SHSchool.DailyManifestation
                     TextScoreList.Add(each.Name);
                 }
             }
-
-            //SmartSchool.Customization.Data.SystemInformation.getField("文字評量對照表");
-            //System.Xml.XmlElement ElmTextScoreList = (System.Xml.XmlElement)SmartSchool.Customization.Data.SystemInformation.Fields["文字評量對照表"];
-            //foreach (System.Xml.XmlNode Node in ElmTextScoreList.SelectNodes("Content/Morality"))
-            //    TextScoreList.Add(Node.Attributes["Face"].InnerText);
 
             return TextScoreList;
         }
