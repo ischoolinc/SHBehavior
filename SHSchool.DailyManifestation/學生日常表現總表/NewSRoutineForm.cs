@@ -184,7 +184,7 @@ namespace SHSchool.DailyManifestation
 
                     //電子報表
                     MemoryStream stream = new MemoryStream();
-                    PageOne.Save(stream, SaveFormat.Doc);
+                    PageOne.Save(stream, SaveFormat.Docx);
                     paperForStudent.Append(new PaperItem(PaperFormat.Office2003Doc, stream, student));
 
                     if (!DocDic.ContainsKey(student))
@@ -210,7 +210,7 @@ namespace SHSchool.DailyManifestation
 
                     //電子報表
                     MemoryStream stream = new MemoryStream();
-                    PageOne.Save(stream, SaveFormat.Doc);
+                    PageOne.Save(stream, SaveFormat.Docx);
                     paperForStudent.Append(new PaperItem(PaperFormat.Office2003Doc, stream, student));
 
                     _doc.Sections.Add(_doc.ImportNode(PageOne.FirstSection, true));
@@ -351,7 +351,16 @@ namespace SHSchool.DailyManifestation
             SetRowCount("獎懲資料欄1", (Cell)builder.CurrentParagraph.ParentNode, obj.DicMeritDemerit.Count);
 
             builder.MoveToMergeField("細2");
-            SetRowCount("獎懲明細欄1", (Cell)builder.CurrentParagraph.ParentNode, obj.ListMerit.Count + obj.ListDeMerit.Count);
+
+            int CountDem = 0;
+            foreach (DemeritRecord dRecord in obj.ListDeMerit)
+            {
+                if (dRecord.Cleared == "是")
+                    continue;
+                CountDem++;
+            }
+
+            SetRowCount("獎懲明細欄1", (Cell)builder.CurrentParagraph.ParentNode, obj.ListMerit.Count + CountDem);
 
             #endregion
 
