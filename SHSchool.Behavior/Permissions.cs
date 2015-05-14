@@ -78,5 +78,12 @@ namespace SHSchool.Behavior
 
 
         public static bool 開放時間設定權限 { get { return FISCA.Permission.UserAcl.Current[開放時間設定].Executable; } }
+
+
+        public static string 歷年功過及出席統計表 { get { return "Report0030"; } }
+        public static bool 歷年功過及出席統計表權限
+        {
+            get { return FISCA.Permission.UserAcl.Current[歷年功過及出席統計表].Executable; }
+        }
     }
 }

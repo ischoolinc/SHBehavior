@@ -38,6 +38,14 @@ namespace SHSchool.Behavior
                 new SHSchool.Behavior.StudentExtendControls.Reports.學生獎勵明細.Report().Print();
             };
 
+            StudentReports = K12.Presentation.NLDPanels.Student.RibbonBarItems["資料統計"];
+            StudentReports["報表"]["學務相關報表"]["歷年功過及出席統計表"].Enable = Permissions.歷年功過及出席統計表權限;
+            StudentReports["報表"]["學務相關報表"]["歷年功過及出席統計表"].Click += delegate
+            {
+                OverTheYearsStatisticsForm form = new OverTheYearsStatisticsForm();
+                form.ShowDialog();
+            };
+
             //匯出
             MenuButton rbItemExport = K12.Presentation.NLDPanels.Student.RibbonBarItems["資料統計"]["匯出"]["學務相關匯出"];
             rbItemExport["匯出文字評量"].Enable = Permissions.匯出文字評量權限;
@@ -218,6 +226,7 @@ namespace SHSchool.Behavior
 
             Catalog ribbon1 = RoleAclSource.Instance["學生"]["報表"];
             ribbon1.Add(new RibbonFeature(Permissions.學生獎勵明細, "學生獎勵明細"));
+            ribbon1.Add(new RibbonFeature(Permissions.歷年功過及出席統計表, "歷年功過及出席統計表"));
 
             Catalog ribbon2 = RoleAclSource.Instance["班級"]["報表"];
             ribbon2.Add(new RibbonFeature(Permissions.德行表現特殊學生名單, "德行表現特殊學生名單"));

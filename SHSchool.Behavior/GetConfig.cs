@@ -12,6 +12,41 @@ namespace SHSchool.Behavior
 {
     static public class GetConfig
     {
+
+        //Period
+        static public List<string> GetPeriodList()
+        {
+            List<string> list = new List<string>();
+
+            foreach(K12.Data.PeriodMappingInfo info in K12.Data.PeriodMapping.SelectAll())
+            {
+                if (!list.Contains(info.Type))
+                {
+                    list.Add(info.Type);
+                }
+            }
+
+            return list;
+        }
+
+
+        //Absence
+        static public List<string> GetAbsenceList()
+        {
+            List<string> list = new List<string>();
+
+            foreach (K12.Data.AbsenceMappingInfo info in K12.Data.AbsenceMapping.SelectAll())
+            {
+                if (!list.Contains(info.Name))
+                {
+                    list.Add(info.Name);
+                }
+            }
+
+            return list;
+        }
+
+
         /// <summary>
         /// 取得文字評量代碼表清單
         /// </summary>

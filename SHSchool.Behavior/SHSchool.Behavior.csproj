@@ -278,6 +278,25 @@
       <DependentUpon>ExportMoralScoreUI.cs</DependentUpon>
     </Compile>
     <Compile Include="ImportNew\Validator\StudentNumberRepeatValidator.cs" />
+    <Compile Include="OverTheYearsStatistics\OverTheYearsStatistics.cs" />
+    <Compile Include="OverTheYearsStatistics\OverTheYearsStatisticsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OverTheYearsStatistics\OverTheYearsStatisticsForm.designer.cs">
+      <DependentUpon>OverTheYearsStatisticsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OverTheYearsStatistics\SelectSchoolYearSemesterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OverTheYearsStatistics\SelectSchoolYearSemesterForm.designer.cs">
+      <DependentUpon>SelectSchoolYearSemesterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OverTheYearsStatistics\SelectTypeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OverTheYearsStatistics\SelectTypeForm.designer.cs">
+      <DependentUpon>SelectTypeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Permissions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -314,6 +333,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Export\ExportMoralScoreUI.resx">
       <DependentUpon>ExportMoralScoreUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OverTheYearsStatistics\OverTheYearsStatisticsForm.resx">
+      <DependentUpon>OverTheYearsStatisticsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OverTheYearsStatistics\SelectSchoolYearSemesterForm.resx">
+      <DependentUpon>SelectSchoolYearSemesterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OverTheYearsStatistics\SelectTypeForm.resx">
+      <DependentUpon>SelectTypeForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -371,6 +399,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Resources\懲戒通知單_新.doc" />
+    <None Include="Resources\歷年功過及出席統計.xls" />
     <None Include="Resources\獎懲人數統計報表.xls" />
     <None Include="Resources\獎懲通知單_住址位移.doc" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -564,6 +593,7 @@
     <Content Include="Library\SmartSchool.ErrorReporting.xml" />
     <Content Include="Resources\desk_64.png" />
     <Content Include="Resources\desk_clock_64.png" />
+    <None Include="Resources\loading5.gif" />
     <None Include="Resources\paste_64.png" />
   </ItemGroup>
   <ItemGroup />
