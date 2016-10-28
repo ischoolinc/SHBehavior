@@ -15,6 +15,7 @@ using Framework.Feature;
 using SHSchool.Behavior.StuAdminExtendControls;
 using SHSchool.Data;
 using SHSchool.Behavior.Feature;
+using FISCA.Presentation.Controls;
 
 namespace SHSchool.Behavior.StudentExtendControls
 {
@@ -53,7 +54,7 @@ namespace SHSchool.Behavior.StudentExtendControls
             _errorProvider = new ErrorProvider();
             _student = student;
             _absenceList = new Dictionary<string, AbsenceInfo>();
-            _semesterProvider = SemesterProvider.GetInstance(); 
+            _semesterProvider = SemesterProvider.GetInstance();
             _hiddenRows = new List<DataGridViewRow>();
         }
 
@@ -146,7 +147,18 @@ namespace SHSchool.Behavior.StudentExtendControls
             foreach (XmlElement element in helper.GetElements("Absence"))
             {
                 AbsenceInfo info = new AbsenceInfo(element);
-                _absenceList.Add(info.Hotkey.ToUpper(), info);
+
+                //熱鍵不重覆
+                if (!_absenceList.ContainsKey(info.Hotkey.ToUpper()))
+                {
+                    _absenceList.Add(info.Hotkey.ToUpper(), info);
+                }
+                else
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append("缺曠別：{0}\n熱鍵：{1} 已重覆\n(英文字母大小寫視為相同熱鍵)");
+                    MsgBox.Show(string.Format(sb.ToString(), info.Name, info.Hotkey));
+                }
 
                 RadioButton rb = new RadioButton();
                 rb.Text = info.Name + "(" + info.Hotkey + ")";
@@ -174,7 +186,7 @@ namespace SHSchool.Behavior.StudentExtendControls
                 _checkedAbsence = rb.Tag as AbsenceInfo;
                 foreach (DataGridViewCell cell in dataGridView.SelectedCells)
                 {
-                    if (cell.ColumnIndex < _startIndex) continue;
+                    if (cell.ColumnIndex < _startIndex || cell.OwningRow.Visible == false) continue;
                     cell.Value = _checkedAbsence.Abbreviation;
                     AbsenceCellInfo acInfo = cell.Tag as AbsenceCellInfo;
                     if (acInfo == null)
@@ -297,9 +309,9 @@ namespace SHSchool.Behavior.StudentExtendControls
             beforeData.Clear();
             afterData.Clear();
             deleteData.Clear();
-            
+
             List<AttendanceRecord> attendList = new List<AttendanceRecord>();
-            foreach (AttendanceRecord each in Attendance.SelectByStudents(new StudentRecord[]{_student}))
+            foreach (AttendanceRecord each in Attendance.SelectByStudents(new StudentRecord[] { _student }))
             {
 
                 //當缺曠日期(大於/等於)起始日期/缺曠日期(小於等於)
@@ -309,7 +321,7 @@ namespace SHSchool.Behavior.StudentExtendControls
                     attendList.Add(each);
                 }
             }
-            
+
             foreach (AttendanceRecord element in attendList)
             {
                 // 這裡要做一些事情  例如找到東西塞進去
@@ -522,7 +534,7 @@ namespace SHSchool.Behavior.StudentExtendControls
                         //舊的Log部份
                         //CurrentUser.Instance.AppLog.Write(EntityType.Student, EntityAction.Insert, _student.ID, desc.ToString(), this.Text, "");
                     }
-                } 
+                }
                 #endregion
             }
             #endregion
@@ -578,7 +590,7 @@ namespace SHSchool.Behavior.StudentExtendControls
                             //CurrentUser.Instance.AppLog.Write(EntityType.Student, EntityAction.Update, _student.ID, desc.ToString(), this.Text, "");
                         }
                     }
-                } 
+                }
                 #endregion
             }
             #endregion
@@ -604,7 +616,7 @@ namespace SHSchool.Behavior.StudentExtendControls
                     desc.AppendLine("刪除「" + date + "」缺曠紀錄 ");
                 }
                 //    //Log部份
-                    ApplicationLog.Log("學務系統.缺曠資料", "批次刪除缺曠資料", "student", _student.ID, desc.ToString());
+                ApplicationLog.Log("學務系統.缺曠資料", "批次刪除缺曠資料", "student", _student.ID, desc.ToString());
                 //    //CurrentUser.Instance.AppLog.Write(EntityType.Student, EntityAction.Delete, _student.ID, desc.ToString(), this.Text, "");
             }
             #endregion
@@ -949,7 +961,7 @@ namespace SHSchool.Behavior.StudentExtendControls
                 }
             }
 
-            return DOW; 
+            return DOW;
             #endregion
         }
 
@@ -972,7 +984,7 @@ namespace SHSchool.Behavior.StudentExtendControls
                     return "六";
                 default:
                     return "日";
-            } 
+            }
             #endregion
         }
 
@@ -988,7 +1000,7 @@ namespace SHSchool.Behavior.StudentExtendControls
             else
                 this.Close();
         }
-        
+
         private void dataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             #region CellDoubleClick
@@ -1010,7 +1022,7 @@ namespace SHSchool.Behavior.StudentExtendControls
                 cell.Value = string.Empty;
                 acInfo.SetValue(AbsenceInfo.Empty);
             }
-            cell.Tag = acInfo; 
+            cell.Tag = acInfo;
             #endregion
         }
 
@@ -1055,7 +1067,7 @@ namespace SHSchool.Behavior.StudentExtendControls
                 {
                     cell.ErrorText = string.Empty;
                 }
-            } 
+            }
             #endregion
         }
 
@@ -1069,7 +1081,7 @@ namespace SHSchool.Behavior.StudentExtendControls
                 if (e.KeyCode != Keys.Space && e.KeyCode != Keys.Delete) return;
                 foreach (DataGridViewCell cell in dataGridView.SelectedCells)
                 {
-                    if (cell.ColumnIndex < _startIndex) continue;
+                    if (cell.ColumnIndex < _startIndex || cell.OwningRow.Visible == false) continue;
                     cell.Value = null;
                     AbsenceCellInfo acInfo = cell.Tag as AbsenceCellInfo;
                     if (acInfo != null)
@@ -1081,7 +1093,7 @@ namespace SHSchool.Behavior.StudentExtendControls
                 AbsenceInfo info = _absenceList[key];
                 foreach (DataGridViewCell cell in dataGridView.SelectedCells)
                 {
-                    if (cell.ColumnIndex < _startIndex) continue;
+                    if (cell.ColumnIndex < _startIndex || cell.OwningRow.Visible == false) continue;
                     AbsenceCellInfo acInfo = cell.Tag as AbsenceCellInfo;
 
                     if (acInfo == null)
@@ -1099,10 +1111,10 @@ namespace SHSchool.Behavior.StudentExtendControls
                     }
                     cell.Tag = acInfo;
                 }
-            } 
+            }
             #endregion
         }
-                
+
         //private void picLock_Click(object sender, EventArgs e)
         //{
         //    bool isLock = false;
@@ -1143,7 +1155,7 @@ namespace SHSchool.Behavior.StudentExtendControls
             }
             _currentStartDate = dateTimeInput1.Value;
             dataGridView.Rows.Clear();
-            LoadAbsense(); 
+            LoadAbsense();
             #endregion
         }
 
@@ -1163,9 +1175,9 @@ namespace SHSchool.Behavior.StudentExtendControls
             }
             _currentEndDate = dateTimeInput2.Value;
             dataGridView.Rows.Clear();
-            LoadAbsense();  
-            #endregion  
-        } 
+            LoadAbsense();
+            #endregion
+        }
 
         private bool IsDirty()
         {
@@ -1187,7 +1199,7 @@ namespace SHSchool.Behavior.StudentExtendControls
                     }
                 }
             }
-            return false; 
+            return false;
             #endregion
         }
 
@@ -1203,7 +1215,7 @@ namespace SHSchool.Behavior.StudentExtendControls
                     bool hasData = false;
                     foreach (DataGridViewCell cell in row.Cells)
                     {
-                        if (cell.ColumnIndex < _startIndex) continue;
+                        if (cell.ColumnIndex < _startIndex || cell.OwningRow.Visible == false) continue;
                         if (!string.IsNullOrEmpty("" + cell.Value))
                         {
                             hasData = true;
@@ -1223,7 +1235,7 @@ namespace SHSchool.Behavior.StudentExtendControls
                     row.Visible = true;
             }
 
-            dataGridView.ResumeLayout(); 
+            dataGridView.ResumeLayout();
             #endregion
         }
 
@@ -1234,7 +1246,7 @@ namespace SHSchool.Behavior.StudentExtendControls
             if (Sday.ShowDialog() == DialogResult.Yes)
             {
                 LoadAbsense();
-            } 
+            }
             #endregion
         }
 
@@ -1294,7 +1306,7 @@ namespace SHSchool.Behavior.StudentExtendControls
         {
             get { return _key; }
             set { _key = value; }
-        } 
+        }
 
         #endregion
     }

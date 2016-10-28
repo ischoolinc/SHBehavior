@@ -14,6 +14,7 @@ using SHSchool.Data;
 using Framework.Feature;
 using K12.Data;
 using SHSchool.Behavior.Feature;
+using FISCA.Presentation.Controls;
 
 namespace SHSchool.Behavior.StudentExtendControls
 {
@@ -135,7 +136,18 @@ namespace SHSchool.Behavior.StudentExtendControls
             foreach (XmlElement element in helper.GetElements("Absence"))
             {
                 AbsenceInfo info = new AbsenceInfo(element);
-                _absenceList.Add(info.Hotkey.ToUpper(), info);
+
+                //熱鍵不重覆
+                if (!_absenceList.ContainsKey(info.Hotkey.ToUpper()))
+                {
+                    _absenceList.Add(info.Hotkey.ToUpper(), info);
+                }
+                else
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append("缺曠別：{0}\n熱鍵：{1} 已重覆\n(英文字母大小寫視為相同熱鍵)");
+                    MsgBox.Show(string.Format(sb.ToString(), info.Name, info.Hotkey));
+                }
 
                 RadioButton rb = new RadioButton();
                 rb.Text = info.Name + "(" + info.Hotkey + ")";
@@ -163,7 +175,7 @@ namespace SHSchool.Behavior.StudentExtendControls
                 _checkedAbsence = rb.Tag as AbsenceInfo;
                 foreach (DataGridViewCell cell in dataGridView.SelectedCells)
                 {
-                    if (cell.ColumnIndex < _startIndex) continue;
+                    if (cell.ColumnIndex < _startIndex || cell.OwningRow.Visible == false) continue;
                     cell.Value = _checkedAbsence.Abbreviation;
                     AbsenceCellInfo acInfo = cell.Tag as AbsenceCellInfo;
                     if (acInfo == null)
@@ -949,7 +961,7 @@ namespace SHSchool.Behavior.StudentExtendControls
                 if (e.KeyCode != Keys.Space && e.KeyCode != Keys.Delete) return;
                 foreach (DataGridViewCell cell in dataGridView.SelectedCells)
                 {
-                    if (cell.ColumnIndex < _startIndex) continue;
+                    if (cell.ColumnIndex < _startIndex || cell.OwningRow.Visible == false) continue;
                     cell.Value = null;
                     AbsenceCellInfo acInfo = cell.Tag as AbsenceCellInfo;
                     if (acInfo != null)
@@ -961,7 +973,7 @@ namespace SHSchool.Behavior.StudentExtendControls
                 AbsenceInfo info = _absenceList[key];
                 foreach (DataGridViewCell cell in dataGridView.SelectedCells)
                 {
-                    if (cell.ColumnIndex < _startIndex) continue;
+                    if (cell.ColumnIndex < _startIndex || cell.OwningRow.Visible == false) continue;
                     AbsenceCellInfo acInfo = cell.Tag as AbsenceCellInfo;
 
                     if (acInfo == null)
@@ -1058,7 +1070,7 @@ namespace SHSchool.Behavior.StudentExtendControls
                     bool hasData = false;
                     foreach (DataGridViewCell cell in row.Cells)
                     {
-                        if (cell.ColumnIndex < _startIndex) continue;
+                        if (cell.ColumnIndex < _startIndex || cell.OwningRow.Visible == false) continue;
                         if (!string.IsNullOrEmpty("" + cell.Value))
                         {
                             hasData = true;
