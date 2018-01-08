@@ -149,12 +149,29 @@ namespace 德行成績試算表
 
 
             Dictionary<string, RewardRecord> MeritDemeritAttDic = new Dictionary<string, RewardRecord>();
+            Dictionary<string, RewardRecord> TotalMeritDemeritDic = new Dictionary<string, RewardRecord>();
 
             BGW.ReportProgress(20, "取得獎勵資料");
             #region 獎勵
 
             foreach (SHMeritRecord each in SHMerit.SelectByStudentIDs(StudentIDList))
             {
+                // 2018/1/8 羿均 新增 累計獎勵紀錄資料
+                RewardRecord totalMerit = new RewardRecord();
+                if (TotalMeritDemeritDic.ContainsKey(each.RefStudentID))
+                {
+                    totalMerit = TotalMeritDemeritDic[each.RefStudentID];
+                }
+
+                totalMerit.MeritACount += each.MeritA.HasValue ? each.MeritA.Value : 0;
+                totalMerit.MeritBCount += each.MeritB.HasValue ? each.MeritB.Value : 0;
+                totalMerit.MeritCCount += each.MeritC.HasValue ? each.MeritC.Value : 0;
+
+                if (!TotalMeritDemeritDic.ContainsKey(each.RefStudentID))
+                {
+                    TotalMeritDemeritDic.Add(each.RefStudentID,totalMerit);
+                }
+
                 if (each.SchoolYear != _Schoolyear || each.Semester != _Semester)
                     continue;
 
@@ -180,10 +197,26 @@ namespace 德行成績試算表
             #region 懲戒
             foreach (SHDemeritRecord each in SHDemerit.SelectByStudentIDs(StudentIDList))
             {
-                if (each.SchoolYear != _Schoolyear || each.Semester != _Semester)
+                if (each.Cleared == "是")
                     continue;
 
-                if (each.Cleared == "是")
+                // 2018/1/8 羿均 新增 累計懲戒紀錄資料
+                RewardRecord totalDemerit = new RewardRecord();
+                if (TotalMeritDemeritDic.ContainsKey(each.RefStudentID))
+                {
+                    totalDemerit = TotalMeritDemeritDic[each.RefStudentID];
+                }
+
+                totalDemerit.DemeritACount += each.DemeritA.HasValue ? each.DemeritA.Value : 0;
+                totalDemerit.DemeritBCount += each.DemeritB.HasValue ? each.DemeritB.Value : 0;
+                totalDemerit.DemeritCCount += each.DemeritC.HasValue ? each.DemeritC.Value : 0;
+
+                if (!TotalMeritDemeritDic.ContainsKey(each.RefStudentID))
+                {
+                    TotalMeritDemeritDic.Add(each.RefStudentID,totalDemerit);
+                }
+
+                if (each.SchoolYear != _Schoolyear || each.Semester != _Semester)
                     continue;
 
                 RewardRecord rr = new RewardRecord();
@@ -518,20 +551,21 @@ namespace 德行成績試算表
                     if (MeritDemeritAttDic.ContainsKey(aStudent.ID))
                     {
                         RewardRecord rr = MeritDemeritAttDic[aStudent.ID];
+                        RewardRecord totalRecord = TotalMeritDemeritDic[aStudent.ID];
+                        
+                        ws.Cells[dataIndex, columnIndexTable["大功"]].PutValue(rr.MeritACount + " / " + totalRecord.MeritACount);
+                        ws.Cells[dataIndex, columnIndexTable["小功"]].PutValue(rr.MeritBCount + " / " + totalRecord.MeritBCount);
+                        ws.Cells[dataIndex, columnIndexTable["嘉獎"]].PutValue(rr.MeritCCount + " / " + totalRecord.MeritCCount);
+                        ws.Cells[dataIndex, columnIndexTable["大過"]].PutValue(rr.DemeritACount + " / " + totalRecord.DemeritACount);
+                        ws.Cells[dataIndex, columnIndexTable["小過"]].PutValue(rr.DemeritBCount + " / " + totalRecord.DemeritBCount);
+                        ws.Cells[dataIndex, columnIndexTable["警告"]].PutValue(rr.DemeritCCount + " / " + totalRecord.DemeritCCount);
 
-                        ws.Cells[dataIndex, columnIndexTable["大功"]].PutValue(rr.MeritACount != 0 ? rr.MeritACount.ToString() : "");
-                        ws.Cells[dataIndex, columnIndexTable["小功"]].PutValue(rr.MeritBCount != 0 ? rr.MeritBCount.ToString() : "");
-                        ws.Cells[dataIndex, columnIndexTable["嘉獎"]].PutValue(rr.MeritCCount != 0 ? rr.MeritCCount.ToString() : "");
-                        ws.Cells[dataIndex, columnIndexTable["大過"]].PutValue(rr.DemeritACount != 0 ? rr.DemeritACount.ToString() : "");
-                        ws.Cells[dataIndex, columnIndexTable["小過"]].PutValue(rr.DemeritBCount != 0 ? rr.DemeritBCount.ToString() : "");
-                        ws.Cells[dataIndex, columnIndexTable["警告"]].PutValue(rr.DemeritCCount != 0 ? rr.DemeritCCount.ToString() : "");
-
-                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["大功"]].PutValue(rr.MeritACount != 0 ? rr.MeritACount.ToString() : "");
-                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["小功"]].PutValue(rr.MeritBCount != 0 ? rr.MeritBCount.ToString() : "");
-                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["嘉獎"]].PutValue(rr.MeritCCount != 0 ? rr.MeritCCount.ToString() : "");
-                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["大過"]].PutValue(rr.DemeritACount != 0 ? rr.DemeritACount.ToString() : "");
-                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["小過"]].PutValue(rr.DemeritBCount != 0 ? rr.DemeritBCount.ToString() : "");
-                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["警告"]].PutValue(rr.DemeritCCount != 0 ? rr.DemeritCCount.ToString() : "");
+                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["大功"]].PutValue(rr.MeritACount + " / " + totalRecord.MeritACount);
+                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["小功"]].PutValue(rr.MeritBCount + " / " + totalRecord.MeritBCount);
+                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["嘉獎"]].PutValue(rr.MeritCCount + " / " + totalRecord.MeritCCount);
+                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["大過"]].PutValue(rr.DemeritACount + " / " + totalRecord.DemeritACount);
+                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["小過"]].PutValue(rr.DemeritBCount + " / " + totalRecord.DemeritBCount);
+                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["警告"]].PutValue(rr.DemeritCCount + " / " + totalRecord.DemeritCCount);
 
                         foreach (string each in rr.Attendance.Keys)
                         {
