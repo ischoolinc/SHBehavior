@@ -101,6 +101,15 @@ namespace 德行成績試算表
             //取得使用者選擇班級
             BGW.ReportProgress(8, "取得所選班級");
             List<ClassRecord> allClasses = Class.SelectByIDs(K12.Presentation.NLDPanels.Class.SelectedSource);
+            //排序(因為上面沒有照班級排序)
+
+
+            int displayOrder;
+      
+
+            allClasses = allClasses.OrderBy(i => i.GradeYear).ThenBy(i => displayOrder=Int32.TryParse(i.DisplayOrder, out displayOrder)? displayOrder :0).ThenBy(i => i.Name).ToList();
+            
+
 
             #region 取得使用者所選擇的班級學生
 
@@ -169,7 +178,7 @@ namespace 德行成績試算表
 
                 if (!TotalMeritDemeritDic.ContainsKey(each.RefStudentID))
                 {
-                    TotalMeritDemeritDic.Add(each.RefStudentID,totalMerit);
+                    TotalMeritDemeritDic.Add(each.RefStudentID, totalMerit);
                 }
 
                 if (each.SchoolYear != _Schoolyear || each.Semester != _Semester)
@@ -201,7 +210,7 @@ namespace 德行成績試算表
                 RewardRecord totalDemerit = new RewardRecord();
 
                 if (each.Cleared == "是")
-                    continue;  
+                    continue;
 
                 if (TotalMeritDemeritDic.ContainsKey(each.RefStudentID))
                 {
@@ -214,7 +223,7 @@ namespace 德行成績試算表
 
                 if (!TotalMeritDemeritDic.ContainsKey(each.RefStudentID))
                 {
-                    TotalMeritDemeritDic.Add(each.RefStudentID,totalDemerit);
+                    TotalMeritDemeritDic.Add(each.RefStudentID, totalDemerit);
                 }
 
                 if (each.SchoolYear != _Schoolyear || each.Semester != _Semester)
