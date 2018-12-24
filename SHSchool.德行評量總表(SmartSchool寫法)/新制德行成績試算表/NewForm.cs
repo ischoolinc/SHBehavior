@@ -102,11 +102,7 @@ namespace 德行成績試算表
             BGW.ReportProgress(8, "取得所選班級");
             List<ClassRecord> allClasses = Class.SelectByIDs(K12.Presentation.NLDPanels.Class.SelectedSource);
             //排序(因為上面沒有照班級排序)
-
-
             int displayOrder;
-      
-
             allClasses = allClasses.OrderBy(i => i.GradeYear).ThenBy(i => displayOrder=Int32.TryParse(i.DisplayOrder, out displayOrder)? displayOrder :0).ThenBy(i => i.Name).ToList();
             
 
