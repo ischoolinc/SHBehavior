@@ -29,6 +29,7 @@ namespace SHSchool.Behavior.StudentExtendControls
         private ErrorProvider _errorProvider;
         private DateTime _currentStartDate;
         private DateTime _currentEndDate;
+        private DateTime? _occorDate = null;
 
         Dictionary<string, int> ColumnIndex = new Dictionary<string, int>();
 
@@ -58,6 +59,19 @@ namespace SHSchool.Behavior.StudentExtendControls
             _hiddenRows = new List<DataGridViewRow>();
         }
 
+        public SingleEditor(StudentRecord student,DateTime occorDate)
+        {
+            InitializeComponent(); //設計工具產生的
+
+            _errorProvider = new ErrorProvider();
+            _student = student;
+            _absenceList = new Dictionary<string, AbsenceInfo>();
+            _semesterProvider = SemesterProvider.GetInstance();
+            _hiddenRows = new List<DataGridViewRow>();
+            _occorDate = occorDate;
+
+        }
+
         private void SingleEditor_Load(object sender, EventArgs e)
         {
             #region Load
@@ -82,6 +96,14 @@ namespace SHSchool.Behavior.StudentExtendControls
 
         private void InitializeDateRange()
         {
+            
+            if (_occorDate != null)
+            {
+                dateTimeInput1.Value = (DateTime)_occorDate;
+                dateTimeInput2.Value = (DateTime)_occorDate;
+            }
+            else
+            { 
             #region 日期定義
             K12.Data.Configuration.ConfigData DateConfig = K12.Data.School.Configuration["Attendance_BatchEditor"];
 
@@ -117,7 +139,8 @@ namespace SHSchool.Behavior.StudentExtendControls
             }
             _currentStartDate = dateTimeInput1.Value;
             _currentEndDate = dateTimeInput2.Value;
-            #endregion
+                #endregion
+            }
         }
 
         private void SaveDateSetting()

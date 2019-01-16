@@ -43,7 +43,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\Documents and Settings\Dylan.Huang\桌面\系統\FiscaAE高中開發\addmodules\開發模組\</OutputPath>
+	<OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -393,7 +393,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="Library\SHSchool.Affair.dll.urls" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -572,7 +571,6 @@
     <Content Include="Library\K12.Data.xml" />
     <Content Include="Library\K12.Presentation.dll" />
     <Content Include="Library\K12.Presentation.xml" />
-    <Content Include="Library\SHSchool.Affair.dll" />
     <Content Include="Library\SHSchool.Affair.pdb" />
     <Content Include="Library\SHSchool.Data.dll" />
     <Content Include="Library\SHSchool.Data.pdb" />
