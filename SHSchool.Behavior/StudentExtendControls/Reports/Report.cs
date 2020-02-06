@@ -88,7 +88,7 @@ namespace SHSchool.Behavior.StudentExtendControls.Reports.學生獎勵明細
             meritTable.Add("C", "嘉獎");
 
             //初始化
-            string[] columnString = new string[] { "嘉獎", "小功", "大功", "事由" };
+            string[] columnString = new string[] { "嘉獎", "小功", "大功", "事由", "備註" };
             int i = 4;
             foreach (string s in columnString)
             {
@@ -197,6 +197,7 @@ namespace SHSchool.Behavior.StudentExtendControls.Reports.學生獎勵明細
                     string semester = var.SelectSingleNode("Semester").InnerText;
                     string occurDate = DateTime.Parse(var.SelectSingleNode("OccurDate").InnerText).ToShortDateString();
                     string reason = var.SelectSingleNode("Reason").InnerText;
+                    string remark = var.SelectSingleNode("Remark").InnerText; //2019/12/31 - 新增
                     string disciplineID = var.GetAttribute("ID");
                     string sso = schoolYear + "_" + semester + "_" + occurDate + "_" + disciplineID;
 
@@ -213,6 +214,10 @@ namespace SHSchool.Behavior.StudentExtendControls.Reports.學生獎勵明細
                     //加入事由
                     if (!studentDisciplineDetail[studentID][sso].ContainsKey("事由"))
                         studentDisciplineDetail[studentID][sso].Add("事由", reason);
+
+                    //加入事由
+                    if (!studentDisciplineDetail[studentID][sso].ContainsKey("備註"))
+                        studentDisciplineDetail[studentID][sso].Add("備註", remark);
 
                     XmlElement discipline = (XmlElement)var.SelectSingleNode("Detail/Discipline/Merit");
                     foreach (XmlAttribute attr in discipline.Attributes)
@@ -233,7 +238,7 @@ namespace SHSchool.Behavior.StudentExtendControls.Reports.學生獎勵明細
                                 studentDisciplineDetail[studentID][sso].Add(name, attr.InnerText);
                         }
                     }
-                }             
+                }
             }
 
             #endregion
@@ -251,7 +256,7 @@ namespace SHSchool.Behavior.StudentExtendControls.Reports.學生獎勵明細
             int startPage = 1;
             int pageNumber = 1;
 
-            int columnNumber = 8;
+            int columnNumber = 9;
 
             //合併標題列
             ptws.Cells.CreateRange(0, 0, 1, columnNumber).Merge();

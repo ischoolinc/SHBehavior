@@ -625,6 +625,10 @@ namespace SHSchool.DailyManifestation
 
                 //填入獎懲支數
                 Write(meritRCell, record.Reason);
+                meritRCell = GetMoveRightCell(meritRCell, 1);
+
+                //填入獎懲備註
+                Write(meritRCell, record.Remark);
 
                 Row Nextrow = meritRCell.ParentRow.NextSibling as Row; //取得下一行
                 if (Nextrow == null)
@@ -654,6 +658,10 @@ namespace SHSchool.DailyManifestation
 
                 //填入獎懲支數
                 Write(meritRCell, record.Reason);
+                meritRCell = GetMoveRightCell(meritRCell, 1);
+
+                //填入獎懲支數
+                Write(meritRCell, record.Remark);
 
                 Row Nextrow = meritRCell.ParentRow.NextSibling as Row; //取得下一行
                 if (Nextrow == null)

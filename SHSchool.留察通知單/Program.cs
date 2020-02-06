@@ -9,6 +9,8 @@ using FISCA.Presentation.Controls;
 
 namespace SHSchool.留察通知單
 {
+
+    //SHSchool.KeptInSchoolAnAdviceNote.dll
     public class Program
     {
         [MainMethod()]
@@ -33,8 +35,8 @@ namespace SHSchool.留察通知單
 
             RibbonBarItem StudentReports = K12.Presentation.NLDPanels.Student.RibbonBarItems["資料統計"];
             //StudentReports["報表"]["學務相關報表"].Image = Properties.Resources.boolean_field_fav_64;
-            StudentReports["報表"]["學務相關報表"]["留察通知單"].Enable = Permissions.學生留察通知單權限;
-            StudentReports["報表"]["學務相關報表"]["留察通知單"].Click += delegate
+            StudentReports["報表"]["學務相關報表"]["通知單"]["留察通知單"].Enable = Permissions.學生留察通知單權限;
+            StudentReports["報表"]["學務相關報表"]["通知單"]["留察通知單"].Click += delegate
             {
                 Features.Invoke(URL學生留察通知單);
             }; 
@@ -55,8 +57,8 @@ namespace SHSchool.留察通知單
 
             RibbonBarItem ClassReports = K12.Presentation.NLDPanels.Class.RibbonBarItems["資料統計"];
             //ClassReports["報表"]["學務相關報表"].Image = Properties.Resources.boolean_field_fav_64;
-            ClassReports["報表"]["學務相關報表"]["留察通知單"].Enable = Permissions.班級留察通知單權限;
-            ClassReports["報表"]["學務相關報表"]["留察通知單"].Click += delegate
+            ClassReports["報表"]["學務相關報表"]["通知單"]["留察通知單"].Enable = Permissions.班級留察通知單權限;
+            ClassReports["報表"]["學務相關報表"]["通知單"]["留察通知單"].Click += delegate
             {
                 Features.Invoke(URL班級留察通知單);
             }; 
@@ -67,11 +69,11 @@ namespace SHSchool.留察通知單
             {
                 if (K12.Presentation.NLDPanels.Student.SelectedSource.Count <= 0)
                 {
-                    StudentReports["報表"]["學務相關報表"]["留察通知單"].Enable = false;
+                    StudentReports["報表"]["學務相關報表"]["通知單"]["留察通知單"].Enable = false;
                 }
                 else
                 {
-                    StudentReports["報表"]["學務相關報表"]["留察通知單"].Enable = Permissions.學生留察通知單權限;
+                    StudentReports["報表"]["學務相關報表"]["通知單"]["留察通知單"].Enable = Permissions.學生留察通知單權限;
                 }
             };
 
@@ -79,11 +81,11 @@ namespace SHSchool.留察通知單
             {
                 if (K12.Presentation.NLDPanels.Class.SelectedSource.Count <= 0)
                 {
-                    ClassReports["報表"]["學務相關報表"]["留察通知單"].Enable = false;
+                    ClassReports["報表"]["學務相關報表"]["通知單"]["留察通知單"].Enable = false;
                 }
                 else
                 {
-                    ClassReports["報表"]["學務相關報表"]["留察通知單"].Enable = Permissions.班級留察通知單權限;
+                    ClassReports["報表"]["學務相關報表"]["通知單"]["留察通知單"].Enable = Permissions.班級留察通知單權限;
                 }
             }; 
             #endregion
