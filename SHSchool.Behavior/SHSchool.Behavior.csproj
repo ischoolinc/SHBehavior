@@ -43,7 +43,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-	<OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -498,7 +498,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\boolean_field_fav_64.png" />
-    <None Include="Resources\學生獎懲明細.xls" />
     <None Include="Resources\學生缺曠明細.xls" />
   </ItemGroup>
   <ItemGroup>

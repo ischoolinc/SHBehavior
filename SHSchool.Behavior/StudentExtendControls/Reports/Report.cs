@@ -55,7 +55,7 @@ namespace SHSchool.Behavior.StudentExtendControls.Reports.學生獎勵明細
 
         void _BGWDisciplineDetail_DoWork(object sender, DoWorkEventArgs e)
         {
-            string reportName = "學生獎勵記錄明細";
+            string reportName = "學生獎勵明細";
 
             #region 快取相關資料
 
