@@ -266,8 +266,12 @@ namespace SHSchool.Behavior.StudentExtendControls
 
             _startIndex = ColumnIndex["學期"] + 1;
 
+            List<string> cols = new List<string>() { "學年度", "學期" };
+
             foreach (PeriodInfo info in collection.GetSortedList())
             {
+                cols.Add(info.Name);
+
                 int columnIndex = dataGridView.Columns.Add(info.Name, info.Name);
                 DataGridViewColumn column = dataGridView.Columns[columnIndex];
                 column.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
@@ -275,6 +279,9 @@ namespace SHSchool.Behavior.StudentExtendControls
                 column.ReadOnly = true;
                 column.Tag = info;
             }
+            Campus.Windows.DataGridViewImeDecorator dec = new Campus.Windows.DataGridViewImeDecorator(this.dataGridView, cols);
+
+
             #endregion
         }
 
