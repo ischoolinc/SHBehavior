@@ -403,9 +403,7 @@ namespace 德行成績試算表
 
             if ((ptColIndex - TextScoreList.Count > 0) && (TextScoreList.Count > 0))
             {
-                prototypeSheet.Cells.CreateRange(1, ptColIndex - TextScoreList.Count, 1, TextScoreList.Count).Merge();
-                prototypeSheet.Cells.CreateRange(2, ptColIndex - TextScoreList.Count, 1, TextScoreList.Count).Merge();
-                prototypeSheet.Cells.CreateRange(3, ptColIndex - TextScoreList.Count, 1, TextScoreList.Count).Merge();
+                prototypeSheet.Cells.CreateRange(1, ptColIndex - TextScoreList.Count, 3, TextScoreList.Count).Merge();
             }
 
             prototypeSheet.Cells.CreateRange(ptColIndex, 1, true).Copy(tempAfterOtherDiff);
