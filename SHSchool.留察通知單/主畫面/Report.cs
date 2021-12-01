@@ -82,9 +82,7 @@ namespace SHSchool.留察通知單
 
             SelectedStudents.Sort(new Comparison<StudentRecord>(CommonMethods.ClassSeatNoComparer));
             #endregion
-
-            string reportName = "留察通知單";
-
+            
             //超級資訊物件
             Dictionary<string, StudentOBJ> StudentSuperOBJ = new Dictionary<string, StudentOBJ>();
             //所有學生ID
@@ -133,6 +131,7 @@ namespace SHSchool.留察通知單
             {
                 DemeritList = Demerit.SelectByRegisterDate(allStudentID, obj.StartDate, obj.EndDate);
             }
+            string reportName = "留察通知單(" + obj.StartDate.ToString("yyyy-MM-dd") + "至" + obj.EndDate.ToString("yyyy-MM-dd") + ")";
 
             //依日期排序
             DemeritList.Sort(SortDateTime);
@@ -281,6 +280,7 @@ namespace SHSchool.留察通知單
                 StudentOBJ eachStudentInfo = StudentSuperOBJ[student];
 
                 //學生資料
+                mapping.Add("系統編號", "系統編號{" + eachStudentInfo.student.ID + "}");
                 mapping.Add("學生姓名", eachStudentInfo.student.Name);
                 mapping.Add("班級", eachStudentInfo.ClassName);
                 mapping.Add("座號", eachStudentInfo.SeatNo);
@@ -389,7 +389,9 @@ namespace SHSchool.留察通知單
                 Directory.CreateDirectory(path);
             path = Path.Combine(path, reportName + ".doc");
             path2 = Path.Combine(path2, reportName + "(學生清單).xls");
-            e.Result = new object[] { reportName, path, doc, path2, obj.PrintStudentList, wb };
+
+            string message = "【電子報表通知】您好 本期「{0}」已產生,可於電子報表中檢視「資料期間：{1} 至 {2}」";
+            e.Result = new object[] { reportName, path, doc, path2, obj.PrintStudentList, wb, string.Format(message, "留察通知單", obj.StartDate.ToShortDateString(), obj.EndDate.ToShortDateString()) };
         }
 
         private int SortDateTime(DemeritRecord x, DemeritRecord y)
