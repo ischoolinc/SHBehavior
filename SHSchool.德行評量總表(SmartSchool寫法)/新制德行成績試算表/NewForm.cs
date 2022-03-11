@@ -579,6 +579,24 @@ namespace 德行成績試算表
                             Paper_ws.Cells[Paper_dataIndex, columnIndexTable["小過"]].PutValue(rr.DemeritBCount + " / " + totalRecord.DemeritBCount);
                             Paper_ws.Cells[Paper_dataIndex, columnIndexTable["警告"]].PutValue(rr.DemeritCCount + " / " + totalRecord.DemeritCCount);
                         }
+                        else
+                        {
+                            //有缺曠沒獎懲，要印獎懲0/0
+                            //https://3.basecamp.com/4399967/buckets/15765350/todos/4520462594
+                            ws.Cells[dataIndex, columnIndexTable["大功"]].PutValue("0 / 0");
+                            ws.Cells[dataIndex, columnIndexTable["小功"]].PutValue("0 / 0");
+                            ws.Cells[dataIndex, columnIndexTable["嘉獎"]].PutValue("0 / 0");
+                            ws.Cells[dataIndex, columnIndexTable["大過"]].PutValue("0 / 0");
+                            ws.Cells[dataIndex, columnIndexTable["小過"]].PutValue("0 / 0");
+                            ws.Cells[dataIndex, columnIndexTable["警告"]].PutValue("0 / 0");
+
+                            Paper_ws.Cells[Paper_dataIndex, columnIndexTable["大功"]].PutValue("0 / 0");
+                            Paper_ws.Cells[Paper_dataIndex, columnIndexTable["小功"]].PutValue("0 / 0");
+                            Paper_ws.Cells[Paper_dataIndex, columnIndexTable["嘉獎"]].PutValue("0 / 0");
+                            Paper_ws.Cells[Paper_dataIndex, columnIndexTable["大過"]].PutValue("0 / 0");
+                            Paper_ws.Cells[Paper_dataIndex, columnIndexTable["小過"]].PutValue("0 / 0");
+                            Paper_ws.Cells[Paper_dataIndex, columnIndexTable["警告"]].PutValue("0 / 0");
+                        }
                         foreach (string each in rr.Attendance.Keys)
                         {
                             if (columnIndexTable.ContainsKey(each))
@@ -587,6 +605,24 @@ namespace 德行成績試算表
                                 Paper_ws.Cells[Paper_dataIndex, columnIndexTable[each]].PutValue(rr.Attendance[each]);
                             }
                         }
+                    }
+                    else
+                    {
+                        //沒缺曠沒獎懲，要印獎懲0/0
+                        // https://3.basecamp.com/4399967/buckets/15765350/todos/4520462594
+                        ws.Cells[dataIndex, columnIndexTable["大功"]].PutValue("0 / 0");
+                        ws.Cells[dataIndex, columnIndexTable["小功"]].PutValue("0 / 0");
+                        ws.Cells[dataIndex, columnIndexTable["嘉獎"]].PutValue("0 / 0");
+                        ws.Cells[dataIndex, columnIndexTable["大過"]].PutValue("0 / 0");
+                        ws.Cells[dataIndex, columnIndexTable["小過"]].PutValue("0 / 0");
+                        ws.Cells[dataIndex, columnIndexTable["警告"]].PutValue("0 / 0");
+
+                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["大功"]].PutValue("0 / 0");
+                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["小功"]].PutValue("0 / 0");
+                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["嘉獎"]].PutValue("0 / 0");
+                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["大過"]].PutValue("0 / 0");
+                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["小過"]].PutValue("0 / 0");
+                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["警告"]].PutValue("0 / 0");
                     }
 
                     //文字評量部份

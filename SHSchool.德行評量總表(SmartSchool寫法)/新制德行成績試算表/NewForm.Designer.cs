@@ -48,7 +48,7 @@
             this.linkPrint.BackColor = System.Drawing.Color.Transparent;
             this.linkPrint.Location = new System.Drawing.Point(12, 127);
             this.linkPrint.Name = "linkPrint";
-            this.linkPrint.Size = new System.Drawing.Size(60, 17);
+            this.linkPrint.Size = new System.Drawing.Size(78, 22);
             this.linkPrint.TabIndex = 6;
             this.linkPrint.TabStop = true;
             this.linkPrint.Text = "列印設定";
@@ -60,7 +60,7 @@
             this.linkType.BackColor = System.Drawing.Color.Transparent;
             this.linkType.Location = new System.Drawing.Point(73, 127);
             this.linkType.Name = "linkType";
-            this.linkType.Size = new System.Drawing.Size(60, 17);
+            this.linkType.Size = new System.Drawing.Size(78, 22);
             this.linkType.TabIndex = 7;
             this.linkType.TabStop = true;
             this.linkType.Text = "假別設定";
@@ -69,10 +69,9 @@
             // btnSave
             // 
             this.btnSave.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnSave.AutoSize = true;
             this.btnSave.BackColor = System.Drawing.Color.Transparent;
             this.btnSave.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnSave.Location = new System.Drawing.Point(171, 119);
+            this.btnSave.Location = new System.Drawing.Point(171, 124);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 25);
             this.btnSave.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -83,10 +82,9 @@
             // btnExit
             // 
             this.btnExit.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnExit.AutoSize = true;
             this.btnExit.BackColor = System.Drawing.Color.Transparent;
             this.btnExit.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnExit.Location = new System.Drawing.Point(252, 119);
+            this.btnExit.Location = new System.Drawing.Point(252, 124);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(75, 25);
             this.btnExit.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -105,7 +103,7 @@
             this.lbHelp1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.lbHelp1.Location = new System.Drawing.Point(15, 13);
             this.lbHelp1.Name = "lbHelp1";
-            this.lbHelp1.Size = new System.Drawing.Size(154, 21);
+            this.lbHelp1.Size = new System.Drawing.Size(192, 26);
             this.lbHelp1.TabIndex = 10;
             this.lbHelp1.Text = "請選擇列印的學年度學期";
             // 
@@ -123,7 +121,7 @@
             this.intSchoolYear.MinValue = 90;
             this.intSchoolYear.Name = "intSchoolYear";
             this.intSchoolYear.ShowUpDown = true;
-            this.intSchoolYear.Size = new System.Drawing.Size(62, 25);
+            this.intSchoolYear.Size = new System.Drawing.Size(62, 29);
             this.intSchoolYear.TabIndex = 11;
             this.intSchoolYear.Value = 90;
             // 
@@ -141,7 +139,7 @@
             this.intSemester.MinValue = 1;
             this.intSemester.Name = "intSemester";
             this.intSemester.ShowUpDown = true;
-            this.intSemester.Size = new System.Drawing.Size(62, 25);
+            this.intSemester.Size = new System.Drawing.Size(62, 29);
             this.intSemester.TabIndex = 12;
             this.intSemester.Value = 1;
             // 
@@ -156,7 +154,7 @@
             this.lbSchoolYear.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.lbSchoolYear.Location = new System.Drawing.Point(42, 62);
             this.lbSchoolYear.Name = "lbSchoolYear";
-            this.lbSchoolYear.Size = new System.Drawing.Size(47, 21);
+            this.lbSchoolYear.Size = new System.Drawing.Size(58, 26);
             this.lbSchoolYear.TabIndex = 13;
             this.lbSchoolYear.Text = "學年度";
             // 
@@ -171,7 +169,7 @@
             this.lbSemester.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.lbSemester.Location = new System.Drawing.Point(171, 62);
             this.lbSemester.Name = "lbSemester";
-            this.lbSemester.Size = new System.Drawing.Size(34, 21);
+            this.lbSemester.Size = new System.Drawing.Size(41, 26);
             this.lbSemester.TabIndex = 14;
             this.lbSemester.Text = "學期";
             // 
@@ -186,7 +184,7 @@
             this.checkBoxX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.checkBoxX1.Location = new System.Drawing.Point(185, 13);
             this.checkBoxX1.Name = "checkBoxX1";
-            this.checkBoxX1.Size = new System.Drawing.Size(134, 21);
+            this.checkBoxX1.Size = new System.Drawing.Size(162, 26);
             this.checkBoxX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.checkBoxX1.TabIndex = 15;
             this.checkBoxX1.Text = "產生班級電子報表";
@@ -194,7 +192,7 @@
             // 
             // NewForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(339, 155);
             this.Controls.Add(this.checkBoxX1);
@@ -207,6 +205,7 @@
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.linkPrint);
             this.Controls.Add(this.linkType);
+            this.DoubleBuffered = true;
             this.Name = "NewForm";
             this.Text = "日常表現記錄表（新制）";
             this.Load += new System.EventHandler(this.NewForm_Load);
