@@ -6,7 +6,6 @@ using System.Xml;
 using System.Collections;
 using FISCA.Presentation;
 using FISCA.Permission;
-using SHSchool.Affair;
 using Framework;
 using FISCA;
 using SHSchool.Behavior.StuAdminExtendControls;
@@ -169,7 +168,7 @@ namespace SHSchool.Behavior
 
             #region 學務作業
 
-            RibbonBarItem Process = StuAdmin.Instance.RibbonBarItems["資料統計"];
+            RibbonBarItem Process = FISCA.Presentation.MotherForm.RibbonBarItems["學務作業", "資料統計"];
             //Process["其他"].Image = Properties.Resources.boolean_field_fav_64;
             Process["報表"].Image = Properties.Resources.paste_64;
             Process["報表"]["獎懲人數統計"].Enable = Permissions.公務統計報表權限;
@@ -178,7 +177,7 @@ namespace SHSchool.Behavior
                 new SHSchool.Behavior.StuAdminExtendControls.DisciplineStatistics();
             };
 
-            RibbonBarItem TimeSeupt = StuAdmin.Instance.RibbonBarItems["基本設定"];
+            RibbonBarItem TimeSeupt = FISCA.Presentation.MotherForm.RibbonBarItems["學務作業", "基本設定"];
             TimeSeupt["設定"].Image = Properties.Resources.sandglass_unlock_64;
             TimeSeupt["設定"].Size = RibbonBarButton.MenuButtonSize.Large;
             //Process["其他"].Image = Properties.Resources.boolean_field_fav_64;
@@ -191,14 +190,14 @@ namespace SHSchool.Behavior
 
             #region 報表
 
-            RibbonBarItem ClassReports2 = K12.Presentation.NLDPanels.Class.RibbonBarItems["資料統計"];
-            //ClassReports2["報表"]["學務相關報表"].Image = Properties.Resources.boolean_field_fav_64;
-            ClassReports2["報表"]["學務相關報表"]["德行表現特殊學生名單"].Enable = Permissions.德行表現特殊學生名單權限;
-            ClassReports2["報表"]["學務相關報表"]["德行表現特殊學生名單"].Click += delegate
-            {
-                DeXingStatistic statistic = new DeXingStatistic(K12.Presentation.NLDPanels.Class.SelectedSource.ToArray());
-                statistic.ShowDialog();
-            };
+            //2022/3/11 - Dylan決定關閉此功能
+            //RibbonBarItem ClassReports2 = K12.Presentation.NLDPanels.Class.RibbonBarItems["資料統計"];
+            //ClassReports2["報表"]["學務相關報表"]["德行表現特殊學生名單"].Enable = Permissions.德行表現特殊學生名單權限;
+            //ClassReports2["報表"]["學務相關報表"]["德行表現特殊學生名單"].Click += delegate
+            //{
+            //    DeXingStatistic statistic = new DeXingStatistic(K12.Presentation.NLDPanels.Class.SelectedSource.ToArray());
+            //    statistic.ShowDialog();
+            //};
 
             //RibbonBarItem StudentReports = K12.Presentation.NLDPanels.Student.RibbonBarItems["統計報表"];
             //StudentReports["報表"]["新功能"].Image = Properties.Resources.boolean_field_fav_64;

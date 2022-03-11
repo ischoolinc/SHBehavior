@@ -143,11 +143,6 @@
       <HintPath>Library\K12.Presentation.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SHSchool.Affair, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Library\SHSchool.Affair.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="SHSchool.Data, Version=2.0.0.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Library\SHSchool.Data.dll</HintPath>
