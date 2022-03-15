@@ -370,12 +370,12 @@ namespace 德行成績試算表
             ptColIndex = 9;
             foreach (string period in periodAbsence.Keys)
             {
-                prototypeSheet.Cells.CreateRange(2, ptColIndex, 1, periodAbsence[period].Count).Merge();
+                prototypeSheet.Cells.CreateRange(2, ptColIndex, 2, periodAbsence[period].Count).Merge();
                 prototypeSheet.Cells[2, ptColIndex].PutValue(period);
 
                 foreach (string absence in periodAbsence[period])
                 {
-                    prototypeSheet.Cells[3, ptColIndex].PutValue(absence);
+                    prototypeSheet.Cells[4, ptColIndex].PutValue(absence);
                     columnIndexTable.Add(period + "_" + absence, ptColIndex);
                     ptColIndex++;
                 }
