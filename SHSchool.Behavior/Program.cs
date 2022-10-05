@@ -227,8 +227,8 @@ namespace SHSchool.Behavior
             ribbon1.Add(new RibbonFeature(Permissions.學生獎勵明細, "學生獎勵明細"));
             ribbon1.Add(new RibbonFeature(Permissions.歷年功過及出席統計表, "歷年功過及出席統計表"));
 
-            Catalog ribbon2 = RoleAclSource.Instance["班級"]["報表"];
-            ribbon2.Add(new RibbonFeature(Permissions.德行表現特殊學生名單, "德行表現特殊學生名單"));
+            //Catalog ribbon2 = RoleAclSource.Instance["班級"]["報表"];
+            //ribbon2.Add(new RibbonFeature(Permissions.德行表現特殊學生名單, "德行表現特殊學生名單"));
 
             //ribbon = RoleAclSource.Instance["班級"]["報表"];
             //ribbon.Add(new RibbonFeature(Permissions.班級懲戒通知單, "懲戒通知單(new)"));
