@@ -498,7 +498,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\boolean_field_fav_64.png" />
-    <None Include="Resources\學生缺曠明細.xls" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\attach_write_64.png" />

@@ -294,7 +294,7 @@ namespace SHSchool.Behavior.StudentExtendControls.Reports.學生獎勵明細
                 ws.Cells.CreateRange(index, 4, false).Copy(ptHeader);
 
                 //填寫基本資料
-                ws.Cells[index, 0].PutValue(School.ChineseName + " 個人獎勵明細");
+                ws.Cells[index, 0].PutValue(School.ChineseName + "\n個人獎勵明細");
                 ws.Cells[index + 1, 0].PutValue("班級：" + ((studentInfo.Class == null) ? "　　　" : studentInfo.Class.Name) + "　　座號：" + ((studentInfo.SeatNo == null) ? "　" : studentInfo.SeatNo.ToString()) + "　　姓名：" + studentInfo.Name + "　　學號：" + studentInfo.StudentNumber);
 
                 dataIndex = index + 4;

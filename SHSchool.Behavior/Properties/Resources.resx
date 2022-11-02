@@ -133,9 +133,6 @@
   <data name="學生獎勵記錄明細" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\學生獎勵記錄明細.xls;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="學生缺曠明細" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\學生缺曠明細.xls;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="懲戒通知單_新" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\懲戒通知單_新.doc;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

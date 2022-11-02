@@ -201,16 +201,6 @@ namespace SHSchool.Behavior.Properties {
         /// <summary>
         ///   查詢類型 System.Byte[] 的當地語系化資源。
         /// </summary>
-        internal static byte[] 學生缺曠明細 {
-            get {
-                object obj = ResourceManager.GetObject("學生缺曠明細", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查詢類型 System.Byte[] 的當地語系化資源。
-        /// </summary>
         internal static byte[] 懲戒通知單_新 {
             get {
                 object obj = ResourceManager.GetObject("懲戒通知單_新", resourceCulture);
