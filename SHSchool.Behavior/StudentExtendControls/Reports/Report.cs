@@ -246,7 +246,7 @@ namespace SHSchool.Behavior.StudentExtendControls.Reports.學生獎勵明細
             #region 產生範本
 
             Workbook template = new Workbook();
-            template.Open(new MemoryStream(Properties.Resources.學生獎勵記錄明細), FileFormatType.Excel2003);
+            template.Open(new MemoryStream(Properties.Resources.學生獎勵記錄明細));
 
             Workbook prototype = new Workbook();
             prototype.Copy(template);
@@ -346,9 +346,13 @@ namespace SHSchool.Behavior.StudentExtendControls.Reports.學生獎勵明細
                 disciplineStatisticsRange.SetOutlineBorder(BorderType.TopBorder, CellBorderType.Double, Color.Black);
                 disciplineStatisticsRange.SetOutlineBorder(BorderType.BottomBorder, CellBorderType.Double, Color.Black);
                 disciplineStatisticsRange.RowHeight = 20.0;
-                ws.Cells[dataIndex, 0].Style.HorizontalAlignment = TextAlignmentType.Center;
-                ws.Cells[dataIndex, 0].Style.VerticalAlignment = TextAlignmentType.Center;
-                ws.Cells[dataIndex, 0].Style.Font.Size = 10;
+
+                Style _style = ws.Cells[dataIndex, 0].GetStyle();
+                _style.HorizontalAlignment = TextAlignmentType.Center;
+                _style.VerticalAlignment = TextAlignmentType.Center;
+                _style.Font.Size = 10;
+
+                ws.Cells[dataIndex, 0].SetStyle(_style);
                 ws.Cells[dataIndex, 0].PutValue("獎勵總計");
                 dataIndex++;
 
@@ -356,10 +360,13 @@ namespace SHSchool.Behavior.StudentExtendControls.Reports.學生獎勵明細
                 ws.Cells.CreateRange(dataIndex, 0, 1, columnNumber).Copy(ptEachRow);
                 ws.Cells.CreateRange(dataIndex, 0, 1, columnNumber).RowHeight = 27.0;
                 ws.Cells.CreateRange(dataIndex, 0, 1, columnNumber).Merge();
-                ws.Cells[dataIndex, 0].Style.HorizontalAlignment = TextAlignmentType.Center;
-                ws.Cells[dataIndex, 0].Style.VerticalAlignment = TextAlignmentType.Center;
-                ws.Cells[dataIndex, 0].Style.Font.Size = 10;
-                ws.Cells[dataIndex, 0].Style.ShrinkToFit = true;
+
+                Style _style2 = ws.Cells[dataIndex, 0].GetStyle();
+                _style2.HorizontalAlignment = TextAlignmentType.Center;
+                _style2.VerticalAlignment = TextAlignmentType.Center;
+                _style2.Font.Size = 10;
+                _style2.ShrinkToFit = true;
+                ws.Cells[dataIndex, 0].SetStyle(_style2);
 
                 StringBuilder text = new StringBuilder("");
                 Dictionary<string, int> disciplineStatistics = studentDisciplineStatistics[studentInfo.ID];

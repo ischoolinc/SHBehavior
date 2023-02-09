@@ -16,7 +16,6 @@ namespace SHSchool.留察通知單
         private string base64 = null;
         private bool _isUpload = false;
         private string _defaultTemplate; //預設範本1 + 預設範本2 + 自訂範本
-        private bool _printHasRecordOnly;
         private DateRangeModeNew _mode = DateRangeModeNew.Month;
         private bool _printStudentList;
 

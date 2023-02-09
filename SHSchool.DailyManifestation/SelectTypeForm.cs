@@ -17,9 +17,7 @@ namespace SHSchool.DailyManifestation
 
         private List<string> typeList = new List<string>();
         private List<string> absenceList = new List<string>();
-
-        bool valueOnChange = false;
-
+        
         public SelectTypeForm(string name)
         {
             InitializeComponent();
@@ -63,7 +61,6 @@ namespace SHSchool.DailyManifestation
             }
 
             #region Åª¨ú¦C¦L³]©w Preference
-            valueOnChange = true;
             ConfigData cd = Campus.Configuration.Config.User[_preferenceElementName];
             string strr = cd["XmlData"];
             XmlElement config;
@@ -106,8 +103,6 @@ namespace SHSchool.DailyManifestation
             }
 
             cd.Save();
-
-            valueOnChange = false;
 
             #endregion
         }

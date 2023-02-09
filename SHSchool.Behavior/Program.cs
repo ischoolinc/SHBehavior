@@ -6,15 +6,11 @@ using System.Xml;
 using System.Collections;
 using FISCA.Presentation;
 using FISCA.Permission;
-using Framework;
 using FISCA;
-using SHSchool.Behavior.StuAdminExtendControls;
-using SHSchool.Behavior.ClassExtendControls;
 using SHSchool.Behavior.StudentExtendControls;
 using SHSchool.Data;
 using K12.Presentation;
 using System.Windows.Forms;
-using SHSchool.Behavior.StudentExtendControls.Reports.學生獎勵明細;
 using Campus.DocumentValidator;
 
 namespace SHSchool.Behavior

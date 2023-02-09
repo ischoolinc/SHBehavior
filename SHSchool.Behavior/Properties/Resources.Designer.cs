@@ -201,16 +201,6 @@ namespace SHSchool.Behavior.Properties {
         /// <summary>
         ///   查詢類型 System.Byte[] 的當地語系化資源。
         /// </summary>
-        internal static byte[] 懲戒通知單_新 {
-            get {
-                object obj = ResourceManager.GetObject("懲戒通知單_新", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查詢類型 System.Byte[] 的當地語系化資源。
-        /// </summary>
         internal static byte[] 歷年功過及出席統計 {
             get {
                 object obj = ResourceManager.GetObject("歷年功過及出席統計", resourceCulture);
@@ -224,16 +214,6 @@ namespace SHSchool.Behavior.Properties {
         internal static byte[] 獎懲人數統計報表 {
             get {
                 object obj = ResourceManager.GetObject("獎懲人數統計報表", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查詢類型 System.Byte[] 的當地語系化資源。
-        /// </summary>
-        internal static byte[] 獎懲通知單_住址位移 {
-            get {
-                object obj = ResourceManager.GetObject("獎懲通知單_住址位移", resourceCulture);
                 return ((byte[])(obj));
             }
         }

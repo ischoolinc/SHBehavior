@@ -22,9 +22,7 @@ namespace SHSchool.Behavior
 
         private List<string> typeList = new List<string>();
         private List<string> absenceList = new List<string>();
-
-        bool valueOnChange = false;
-
+       
         public SelectTypeForm(string name)
         {
             InitializeComponent();
@@ -72,7 +70,6 @@ namespace SHSchool.Behavior
 
 
             #region Åª¨ú¦C¦L³]©w Preference
-            valueOnChange = true;
 
             K12.Data.Configuration.ConfigData Defconfig = K12.Data.School.Configuration[_preferenceElementName];
 
@@ -114,8 +111,6 @@ namespace SHSchool.Behavior
                 }
                 #endregion
             }
-
-            valueOnChange = false;
 
             #endregion
         }
@@ -245,22 +240,5 @@ namespace SHSchool.Behavior
                 }
             }
         }
-
-        //private void dataGridViewX1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        //{
-        //    if (e.ColumnIndex < 0 || e.RowIndex < 0)
-        //        return;
-        //    if ( valueOnChange)
-        //        return;
-        //    else
-        //        valueOnChange = true;
-        //    DataGridViewCell checkedCell=dataGridViewX1.Rows[e.RowIndex].Cells[e.ColumnIndex];
-        //    foreach (DataGridViewCell  cell in dataGridViewX1.SelectedCells)
-        //    {
-        //        if (cell.OwningColumn is DataGridViewCheckBoxColumn && cell != checkedCell)
-        //            cell.Value = checkedCell.Value;
-        //    }
-        //    valueOnChange = false;
-        //}
     }
 }

@@ -82,7 +82,7 @@ namespace SHSchool.Behavior
 
             try
             {
-                wb.Save(path, FileFormatType.Excel2003);
+                wb.Save(path);
                 MotherForm.SetStatusBarMessage(reportName + "產生完成");
                 System.Diagnostics.Process.Start(path);
             }
@@ -90,13 +90,13 @@ namespace SHSchool.Behavior
             {
                 SaveFileDialog sd = new SaveFileDialog();
                 sd.Title = "另存新檔";
-                sd.FileName = reportName + ".xls";
-                sd.Filter = "Excel檔案 (*.xls)|*.xls|所有檔案 (*.*)|*.*";
+                sd.FileName = reportName + ".xlsx";
+                sd.Filter = "Excel檔案 (*.xlsx)|*.xlsx|所有檔案 (*.*)|*.*";
                 if (sd.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
-                        wb.Save(sd.FileName, FileFormatType.Excel2003);
+                        wb.Save(sd.FileName);
                     }
                     catch
                     {
@@ -517,7 +517,7 @@ namespace SHSchool.Behavior
         private Workbook GetTemplate(int sems_num)
         {
             Workbook template = new Workbook();
-            template.Open(new MemoryStream(Properties.Resources.歷年功過及出席統計), FileFormatType.Excel2003);
+            template.Open(new MemoryStream(Properties.Resources.歷年功過及出席統計));
 
             Worksheet tempWorksheet = template.Worksheets["" + sems_num];
 

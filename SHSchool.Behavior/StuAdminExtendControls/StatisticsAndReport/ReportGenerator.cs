@@ -21,7 +21,7 @@ namespace SHSchool.Behavior.StuAdminExtendControls
             _semester = semester;
 
             _workbook = new Workbook();
-            _workbook.Open(new MemoryStream(Properties.Resources.獎懲人數統計報表), FileFormatType.Excel2003);
+            _workbook.Open(new MemoryStream(Properties.Resources.獎懲人數統計報表));
             _workbook.Worksheets.Clear();
             _systems = new Dictionary<string, EduSystem>();
 
@@ -58,7 +58,7 @@ namespace SHSchool.Behavior.StuAdminExtendControls
             string path = Path.Combine(Application.StartupPath, "Reports");
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-            path = Path.Combine(path, "獎懲人數統計表.xls");
+            path = Path.Combine(path, "獎懲人數統計表.xlsx");
 
             if (File.Exists(path))
             {
@@ -82,8 +82,8 @@ namespace SHSchool.Behavior.StuAdminExtendControls
             {
                 SaveFileDialog sd = new SaveFileDialog();
                 sd.Title = "另存新檔";
-                sd.FileName = "獎懲人數統計表.xls";
-                sd.Filter = "Excel檔案 (*.xls)|*.xls|所有檔案 (*.*)|*.*";
+                sd.FileName = "獎懲人數統計表.xlsx";
+                sd.Filter = "Excel檔案 (*.xlsx)|*.xlsx|所有檔案 (*.*)|*.*";
                 if (sd.ShowDialog() == DialogResult.OK)
                 {
                     try

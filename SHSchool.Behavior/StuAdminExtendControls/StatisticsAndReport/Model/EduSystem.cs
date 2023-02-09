@@ -66,7 +66,7 @@ namespace SHSchool.Behavior.StuAdminExtendControls
         private void LoadTemplate()
         {
             Workbook template = new Workbook();
-            template.Open(new MemoryStream(Properties.Resources.獎懲人數統計報表), FileFormatType.Excel2003);
+            template.Open(new MemoryStream(Properties.Resources.獎懲人數統計報表));
 
             switch (_name)
             {
