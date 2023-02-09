@@ -167,8 +167,8 @@ namespace SHSchool.Behavior
             RibbonBarItem Process = FISCA.Presentation.MotherForm.RibbonBarItems["學務作業", "資料統計"];
             //Process["其他"].Image = Properties.Resources.boolean_field_fav_64;
             Process["報表"].Image = Properties.Resources.paste_64;
-            Process["報表"]["獎懲人數統計"].Enable = Permissions.公務統計報表權限;
-            Process["報表"]["獎懲人數統計"].Click += delegate
+            Process["報表"]["獎懲人數統計(公務統計報表)"].Enable = Permissions.公務統計報表權限;
+            Process["報表"]["獎懲人數統計(公務統計報表)"].Click += delegate
             {
                 new SHSchool.Behavior.StuAdminExtendControls.DisciplineStatistics();
             };
@@ -184,32 +184,8 @@ namespace SHSchool.Behavior
             };
             #endregion
 
-            #region 報表
-
-            //2022/3/11 - Dylan決定關閉此功能
-            //RibbonBarItem ClassReports2 = K12.Presentation.NLDPanels.Class.RibbonBarItems["資料統計"];
-            //ClassReports2["報表"]["學務相關報表"]["德行表現特殊學生名單"].Enable = Permissions.德行表現特殊學生名單權限;
-            //ClassReports2["報表"]["學務相關報表"]["德行表現特殊學生名單"].Click += delegate
-            //{
-            //    DeXingStatistic statistic = new DeXingStatistic(K12.Presentation.NLDPanels.Class.SelectedSource.ToArray());
-            //    statistic.ShowDialog();
-            //};
-
-            //RibbonBarItem StudentReports = K12.Presentation.NLDPanels.Student.RibbonBarItems["統計報表"];
-            //StudentReports["報表"]["新功能"].Image = Properties.Resources.boolean_field_fav_64;
-            //StudentReports["報表"]["新功能"]["懲戒通知單"].Enable = Permissions.學生懲戒通知單權限;
-            //StudentReports["報表"]["新功能"]["懲戒通知單"].Click += delegate
-            //{
-            //    new DisciplineNotification(false);
-            //};
-
-            #endregion
-
             #region 註冊權限
-
-            //Catalog ribbon = RoleAclSource.Instance["學生"]["報表"];
-            //ribbon.Add(new RibbonFeature(Permissions.學生懲戒通知單, "懲戒通知單(new)"));
-
+            
             Catalog ribbon = RoleAclSource.Instance["學生"]["功能按鈕"];
             ribbon.Add(new RibbonFeature(Permissions.缺曠, "缺曠"));
             ribbon.Add(new RibbonFeature(Permissions.長假登錄, "長假登錄"));
@@ -223,14 +199,8 @@ namespace SHSchool.Behavior
             ribbon1.Add(new RibbonFeature(Permissions.學生獎勵明細, "學生獎勵明細"));
             ribbon1.Add(new RibbonFeature(Permissions.歷年功過及出席統計表, "歷年功過及出席統計表"));
 
-            //Catalog ribbon2 = RoleAclSource.Instance["班級"]["報表"];
-            //ribbon2.Add(new RibbonFeature(Permissions.德行表現特殊學生名單, "德行表現特殊學生名單"));
-
-            //ribbon = RoleAclSource.Instance["班級"]["報表"];
-            //ribbon.Add(new RibbonFeature(Permissions.班級懲戒通知單, "懲戒通知單(new)"));
-
             ribbon = RoleAclSource.Instance["學務作業"]["功能按鈕"];
-            ribbon.Add(new RibbonFeature(Permissions.公務統計報表, "公務統計報表"));
+            ribbon.Add(new RibbonFeature(Permissions.公務統計報表, "獎懲人數統計(公務統計報表)"));
             ribbon.Add(new RibbonFeature(Permissions.開放時間設定, "開放時間設定"));
 
             #endregion
