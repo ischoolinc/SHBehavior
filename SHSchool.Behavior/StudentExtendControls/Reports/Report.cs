@@ -245,8 +245,7 @@ namespace SHSchool.Behavior.StudentExtendControls.Reports.學生獎勵明細
 
             #region 產生範本
 
-            Workbook template = new Workbook();
-            template.Open(new MemoryStream(Properties.Resources.學生獎勵記錄明細));
+            Workbook template = new Workbook(new MemoryStream(Properties.Resources.學生獎勵記錄明細), new LoadOptions(LoadFormat.Xlsx));
 
             Workbook prototype = new Workbook();
             prototype.Copy(template);
@@ -288,10 +287,13 @@ namespace SHSchool.Behavior.StudentExtendControls.Reports.學生獎勵明細
 
                 //如果不是第一頁，就在上一頁的資料列下邊加黑線
                 if (index != 0)
-                    ws.Cells.CreateRange(index - 1, 0, 1, columnNumber).SetOutlineBorder(BorderType.BottomBorder, CellBorderType.Medium, Color.Black);
+                    ws.Cells.CreateRange(index - 1, 0, 1, columnNumber).SetOutlineBorder(BorderType.BottomBorder, CellBorderType.Thin, Color.Black);
 
                 //複製 Header
                 ws.Cells.CreateRange(index, 4, false).Copy(ptHeader);
+                ws.Cells.CreateRange(index, 4, false).CopyStyle(ptHeader);
+                ws.Cells.CreateRange(index, 4, false).CopyData(ptHeader);
+
 
                 //填寫基本資料
                 ws.Cells[index, 0].PutValue(School.ChineseName + "\n個人獎勵明細");
@@ -308,6 +310,8 @@ namespace SHSchool.Behavior.StudentExtendControls.Reports.學生獎勵明細
 
                     //複製每一個 row
                     ws.Cells.CreateRange(dataIndex, 1, false).Copy(ptEachRow);
+                    ws.Cells.CreateRange(dataIndex, 1, false).CopyStyle(ptEachRow);
+                    ws.Cells.CreateRange(dataIndex, 1, false).CopyData(ptEachRow);
 
                     //填寫學生獎勵資料
                     ws.Cells[dataIndex, 0].PutValue(ssoSplit[0]);
@@ -357,7 +361,12 @@ namespace SHSchool.Behavior.StudentExtendControls.Reports.學生獎勵明細
                 dataIndex++;
 
                 //獎懲統計內容
+
                 ws.Cells.CreateRange(dataIndex, 0, 1, columnNumber).Copy(ptEachRow);
+                ws.Cells.CreateRange(dataIndex, 0, 1, columnNumber).CopyStyle(ptEachRow);
+                ws.Cells.CreateRange(dataIndex, 0, 1, columnNumber).CopyData(ptEachRow);
+
+
                 ws.Cells.CreateRange(dataIndex, 0, 1, columnNumber).RowHeight = 27.0;
                 ws.Cells.CreateRange(dataIndex, 0, 1, columnNumber).Merge();
 
@@ -386,17 +395,17 @@ namespace SHSchool.Behavior.StudentExtendControls.Reports.學生獎勵明細
                 dataIndex++;
 
                 //資料列上邊加上黑線
-                ws.Cells.CreateRange(index + 3, 0, 1, columnNumber).SetOutlineBorder(BorderType.BottomBorder, CellBorderType.Medium, Color.Black);
+                ws.Cells.CreateRange(index + 3, 0, 1, columnNumber).SetOutlineBorder(BorderType.BottomBorder, CellBorderType.Thin, Color.Black);
 
                 //表格最右邊加上黑線
-                ws.Cells.CreateRange(index + 2, columnNumber - 1, recordCount + 4, 1).SetOutlineBorder(BorderType.RightBorder, CellBorderType.Medium, Color.Black);
+                ws.Cells.CreateRange(index + 2, columnNumber - 1, recordCount + 4, 1).SetOutlineBorder(BorderType.RightBorder, CellBorderType.Thin, Color.Black);
 
                 index = dataIndex;
 
                 //設定分頁
                 if (pageNumber < 500)
                 {
-                    ws.HPageBreaks.Add(index, columnNumber);
+                    ws.HorizontalPageBreaks.Add(index, columnNumber);
                     pageNumber++;
                 }
                 else
@@ -415,7 +424,7 @@ namespace SHSchool.Behavior.StudentExtendControls.Reports.學生獎勵明細
             if (dataIndex > 0)
             {
                 //最後一頁的資料列下邊加上黑線
-                ws.Cells.CreateRange(dataIndex - 1, 0, 1, columnNumber).SetOutlineBorder(BorderType.BottomBorder, CellBorderType.Medium, Color.Black);
+                ws.Cells.CreateRange(dataIndex - 1, 0, 1, columnNumber).SetOutlineBorder(BorderType.BottomBorder, CellBorderType.Thin, Color.Black);
                 ws.Name = startPage + " ~ " + (pageNumber + startPage - 2);
             }
             else
