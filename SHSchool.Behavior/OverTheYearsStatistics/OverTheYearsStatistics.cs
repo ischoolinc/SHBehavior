@@ -307,6 +307,8 @@ namespace SHSchool.Behavior
 
             Workbook wb = new Workbook();
             wb.Copy(pt1);
+            wb.CopyTheme(pt1);
+
             wb.Worksheets[0].Copy(pt1.Worksheets[0]);
 
             int wsCount = wb.Worksheets.Count;
@@ -349,6 +351,7 @@ namespace SHSchool.Behavior
                     {
                         int new_ws_index = wb.Worksheets.Add();
                         wb.Worksheets[new_ws_index].Copy(pt2.Worksheets[0]);
+
                         wb.Worksheets[new_ws_index].Name = "特殊(8學期)";
                         sheets.Add(8, wb.Worksheets[new_ws_index]);
                         sheetIndex.Add(8, 0);
@@ -391,6 +394,8 @@ namespace SHSchool.Behavior
 
                 //取得畫面範圍 Range(0~TotalRow)
                 ws.Cells.CreateRange(index, totalRow, false).Copy(ptrs[cur]);
+                ws.Cells.CreateRange(index, totalRow, false).CopyData(ptrs[cur]);
+                ws.Cells.CreateRange(index, totalRow, false).CopyStyle(ptrs[cur]);
 
                 //填入標題
                 ws.Cells[index + 1, 0].PutValue(string.Format("班級：{0}　　　　學號：{1}　　　　姓名：{2}", (each.RefClass != null) ? each.RefClass.ClassName : "", each.StudentNumber, each.StudentName));
@@ -453,7 +458,7 @@ namespace SHSchool.Behavior
                 sheetIndex[cur] = index;
 
                 //增加列印分割線
-                ws.HPageBreaks.Add(index, 0);
+                ws.HorizontalPageBreaks.Add(index, 0);
 
                 //當學生大於極限值 , 並且列印完所有學生
                 if (studentCount >= limit && studentCount < allStudentCount)
@@ -465,6 +470,7 @@ namespace SHSchool.Behavior
                     //ws.Name = ws.Name + " (" + start + " ~ " + studentCount + ")";
                     ws = wb.Worksheets[wb.Worksheets.Add()];
                     ws.Copy(pts[cur].Worksheets[0]);
+
                     //ws.Name = orig_name;
                     start += pages;
                     limit += pages;
@@ -485,7 +491,7 @@ namespace SHSchool.Behavior
             string path = Path.Combine(Application.StartupPath, "Reports");
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-            path = Path.Combine(path, reportName + ".xlt");
+            path = Path.Combine(path, reportName + ".xlsx");
             e.Result = new object[] { reportName, path, wb };
         }
 
@@ -517,7 +523,7 @@ namespace SHSchool.Behavior
         private Workbook GetTemplate(int sems_num)
         {
             Workbook template = new Workbook();
-            template.Open(new MemoryStream(Properties.Resources.歷年功過及出席統計));
+            template = new Workbook(new MemoryStream(Properties.Resources.歷年功過及出席統計), new LoadOptions(LoadFormat.Excel97To2003));
 
             Worksheet tempWorksheet = template.Worksheets["" + sems_num];
 
@@ -528,12 +534,16 @@ namespace SHSchool.Behavior
 
             Workbook prototype = new Workbook();
             prototype.Copy(template);
+            prototype.CopyTheme(template);
+
             int count = prototype.Worksheets.Count;
             for (int i = count - 1; i > 0; i--)
                 prototype.Worksheets.RemoveAt(i);
 
             prototype.Worksheets[0].Copy(tempWorksheet);
             prototype.Worksheets[0].Cells.CreateRange(0, 2, false).Copy(tempHeader);
+            prototype.Worksheets[0].Cells.CreateRange(0, 2, false).CopyData(tempHeader);
+            prototype.Worksheets[0].Cells.CreateRange(0, 2, false).CopyStyle(tempHeader);
 
             int index = 2;
             rowIndexTable.Clear();
@@ -543,6 +553,9 @@ namespace SHSchool.Behavior
 
             //學期
             prototype.Worksheets[0].Cells.CreateRange(index, 1, false).Copy(tempRow);
+            prototype.Worksheets[0].Cells.CreateRange(index, 1, false).CopyData(tempRow);
+            prototype.Worksheets[0].Cells.CreateRange(index, 1, false).CopyStyle(tempRow);
+
             prototype.Worksheets[0].Cells[index, 0].PutValue("學年度學期");
             index++;
 
@@ -550,6 +563,9 @@ namespace SHSchool.Behavior
             foreach (string var in new string[] { "大功", "小功", "嘉獎" })
             {
                 prototype.Worksheets[0].Cells.CreateRange(index, 1, false).Copy(tempStatistics);
+                prototype.Worksheets[0].Cells.CreateRange(index, 1, false).CopyData(tempStatistics);
+                prototype.Worksheets[0].Cells.CreateRange(index, 1, false).CopyStyle(tempStatistics);
+
                 prototype.Worksheets[0].Cells[index, 1].PutValue(var);
 
                 rowIndexTable.Add(var, index);
@@ -558,6 +574,9 @@ namespace SHSchool.Behavior
             foreach (string var in new string[] { "大過", "小過", "警告", "留校察看" })
             {
                 prototype.Worksheets[0].Cells.CreateRange(index, 1, false).Copy(tempStatistics);
+                prototype.Worksheets[0].Cells.CreateRange(index, 1, false).CopyData(tempStatistics);
+                prototype.Worksheets[0].Cells.CreateRange(index, 1, false).CopyStyle(tempStatistics);
+
                 prototype.Worksheets[0].Cells[index, 1].PutValue(var);
 
                 rowIndexTable.Add(var, index);
@@ -575,6 +594,9 @@ namespace SHSchool.Behavior
                 foreach (string absence in _print_types[period])
                 {
                     prototype.Worksheets[0].Cells.CreateRange(index, 1, false).Copy(tempStatistics);
+                    prototype.Worksheets[0].Cells.CreateRange(index, 1, false).CopyData(tempStatistics);
+                    prototype.Worksheets[0].Cells.CreateRange(index, 1, false).CopyStyle(tempStatistics);
+
                     prototype.Worksheets[0].Cells[index, 1].PutValue(absence);
 
                     rowIndexTable.Add(period + "_" + absence, index);
@@ -586,6 +608,9 @@ namespace SHSchool.Behavior
 
             //德行成績部分
             prototype.Worksheets[0].Cells.CreateRange(index, 1, false).Copy(tempRow);
+            prototype.Worksheets[0].Cells.CreateRange(index, 1, false).CopyData(tempRow);
+            prototype.Worksheets[0].Cells.CreateRange(index, 1, false).CopyStyle(tempRow);
+
             prototype.Worksheets[0].Cells[index, 0].PutValue("德行成績");
 
             rowIndexTable.Add("德行成績", index);
@@ -614,8 +639,11 @@ namespace SHSchool.Behavior
             for (int j = index; j < index + detailRow; j++)
             {
                 prototype.Worksheets[0].Cells.CreateRange(j, 1, false).Copy(tempDetail);
+                prototype.Worksheets[0].Cells.CreateRange(j, 1, false).CopyStyle(tempDetail);
+                prototype.Worksheets[0].Cells.CreateRange(j, 1, false).CopyData(tempDetail);
             }
-            prototype.Worksheets[0].Cells.CreateRange(index, 0, detailRow, 1).Merge();
+            prototype.Worksheets[0].Cells.CreateRange(index, 0, detailRow, 2).Merge();
+
             prototype.Worksheets[0].Cells[index, 0].PutValue("獎懲明細");
 
             //加上報表底線

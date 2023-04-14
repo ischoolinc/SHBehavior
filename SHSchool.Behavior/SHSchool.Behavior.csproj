@@ -408,7 +408,7 @@
       <DependentUpon>TestSingleEditor.cs</DependentUpon>
     </Compile>
     <None Include="Resources\學生獎勵記錄明細.xlsx" />
-    <None Include="Resources\歷年功過及出席統計.xlsx" />
+    <None Include="Resources\歷年功過及出席統計.xls" />
     <None Include="Resources\獎懲人數統計報表.xlsx" />
   </ItemGroup>
   <ItemGroup>

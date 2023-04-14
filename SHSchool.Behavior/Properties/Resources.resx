@@ -151,10 +151,10 @@
   <data name="學生獎勵記錄明細" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\學生獎勵記錄明細.xlsx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="歷年功過及出席統計" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\歷年功過及出席統計.xlsx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="獎懲人數統計報表" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\獎懲人數統計報表.xlsx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="歷年功過及出席統計" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\歷年功過及出席統計.xls;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
