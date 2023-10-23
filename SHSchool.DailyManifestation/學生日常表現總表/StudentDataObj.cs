@@ -440,7 +440,7 @@ namespace SHSchool.DailyManifestation
                         }
 
                         DicMeritDemerit[SchoolYearSemester].Add("留察", "是");
-                                      
+
                     }
                 }
 
@@ -462,7 +462,9 @@ namespace SHSchool.DailyManifestation
                     TextScoreDic.Add(SchoolYearSemester, new Dictionary<string, string>());
                 }
 
-                TextScoreDic[SchoolYearSemester].Add("導師評語", each.Comment);
+                //增加一格空白,用來把資料跟日常生活表現上的導師評語區分
+                if (!string.IsNullOrEmpty(each.Comment))
+                    TextScoreDic[SchoolYearSemester].Add("導師評語 ", each.Comment);
 
                 DSXmlHelper helper1 = new DSXmlHelper(each.TextScore);
 

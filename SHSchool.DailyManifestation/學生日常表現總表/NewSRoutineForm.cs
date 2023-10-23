@@ -900,13 +900,17 @@ namespace SHSchool.DailyManifestation
         private List<string> GetBehaviorConfig()
         {
             List<string> TextScoreList = new List<string>();
-            TextScoreList.Add("導師評語");
             foreach (SHSchool.Data.MoralityRecord each in SHSchool.Data.Morality.SelectAll())
             {
                 if (!TextScoreList.Contains(each.Name))
                 {
                     TextScoreList.Add(each.Name);
                 }
+            }
+
+            if (!TextScoreList.Contains("導師評語"))
+            {
+                TextScoreList.Add("導師評語 ");
             }
 
             return TextScoreList;

@@ -106,7 +106,7 @@
             // 
             this.cbSingeFile.BackgroundStyle.Class = "";
             this.cbSingeFile.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.cbSingeFile.Location = new System.Drawing.Point(50, 89);
+            this.cbSingeFile.Location = new System.Drawing.Point(45, 98);
             this.cbSingeFile.Name = "cbSingeFile";
             this.cbSingeFile.Size = new System.Drawing.Size(276, 21);
             this.cbSingeFile.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -122,7 +122,7 @@
             // 
             this.checkBoxX1.BackgroundStyle.Class = "";
             this.checkBoxX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.checkBoxX1.Location = new System.Drawing.Point(50, 55);
+            this.checkBoxX1.Location = new System.Drawing.Point(45, 64);
             this.checkBoxX1.Name = "checkBoxX1";
             this.checkBoxX1.Size = new System.Drawing.Size(147, 21);
             this.checkBoxX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -138,7 +138,7 @@
             // 
             this.labelX2.BackgroundStyle.Class = "";
             this.labelX2.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX2.Location = new System.Drawing.Point(69, 120);
+            this.labelX2.Location = new System.Drawing.Point(64, 129);
             this.labelX2.Name = "labelX2";
             this.labelX2.Size = new System.Drawing.Size(257, 21);
             this.labelX2.TabIndex = 13;
@@ -153,12 +153,11 @@
             // 
             this.labelX3.BackgroundStyle.Class = "";
             this.labelX3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX3.Location = new System.Drawing.Point(14, 153);
+            this.labelX3.Location = new System.Drawing.Point(14, 181);
             this.labelX3.Name = "labelX3";
-            this.labelX3.Size = new System.Drawing.Size(294, 91);
+            this.labelX3.Size = new System.Drawing.Size(294, 56);
             this.labelX3.TabIndex = 14;
-            this.labelX3.Text = "列印說明:\r\n1.本功能列印之檔案格式為:docx\r\n請以office word 2007以上版本開啟\r\n2.獎懲明細之順序為先獎勵/後懲戒,並依日期排序\r\n3." +
-    "懲戒明細已排除銷過之資料";
+            this.labelX3.Text = "列印說明:\r\n1.獎懲明細之順序為先獎勵/後懲戒,並依日期排序\r\n2.懲戒明細已排除銷過之資料";
             // 
             // NewSRoutineForm
             // 
