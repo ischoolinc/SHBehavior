@@ -117,20 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="德行表現總表新制A3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\德行表現總表新制A3.xls;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="德行表現總表新制A4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\德行表現總表新制A4.xls;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="德行表現總表新制B4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\德行表現總表新制B4.xls;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="日常生活表現總表_功能變數總表" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\日常生活表現總表_功能變數總表.docx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="高中_日常生活表現_班級_a3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\高中_日常生活表現_班級_a3.docx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
 </root>

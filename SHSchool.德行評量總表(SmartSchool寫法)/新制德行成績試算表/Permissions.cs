@@ -16,5 +16,15 @@ namespace 德行成績試算表
                 return FISCA.Permission.UserAcl.Current[日常表現記錄表].Executable;
             }
         }
+
+        public static string 日常表現記錄表_docx { get { return "SHSchool.NewDocxForm"; } }
+
+        public static bool 日常表現記錄表_docx權限
+        {
+            get
+            {
+                return FISCA.Permission.UserAcl.Current[日常表現記錄表_docx].Executable;
+            }
+        }
     }
 }
