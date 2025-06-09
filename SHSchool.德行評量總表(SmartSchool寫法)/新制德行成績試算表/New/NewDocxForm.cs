@@ -7,20 +7,23 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using FISCA.Presentation.Controls;
-using Aspose.Cells;
 using FISCA.DSAUtil;
 using System.Xml;
 using System.IO;
 using K12.Data;
 using SHSchool.Data;
 using SmartSchool.ePaper;
+using Aspose.Words;
+using System.Diagnostics;
+using SmartSchool.Feature.Student;
 
 namespace 德行成績試算表
 {
     public partial class NewDocxForm : BaseForm
     {
         ////主文件
-        //private Document _doc;
+        private Document _doc;
+
         ////單頁範本
         //private Document _template;
         ////
@@ -30,6 +33,7 @@ namespace 德行成績試算表
         /// 班級電子報表
         /// </summary>
         SmartSchool.ePaper.ElectronicPaper paperForClass { get; set; }
+
         bool Carty_paper = false;
 
         int _Schoolyear = 90;
@@ -94,6 +98,9 @@ namespace 德行成績試算表
             string time = DateTime.Now.Hour.ToString().PadLeft(2) + DateTime.Now.Minute.ToString().PadLeft(2);
             paperForClass = new SmartSchool.ePaper.ElectronicPaper(string.Format("日常表現記錄表(新制_{0})", time), _Schoolyear.ToString(), _Semester.ToString(), SmartSchool.ePaper.ViewerType.Class);
 
+            _doc = new Document();
+            _doc.Sections.Clear(); //清空此Document
+
             BGW.ReportProgress(1, "取得紙張設定");
             //取得列印紙張
             int sizeIndex = GetSizeIndex();
@@ -131,7 +138,7 @@ namespace 德行成績試算表
             }
 
             BGW.ReportProgress(15, "取得學生清單");
-            List<StudentRecord> allStudents = Student.SelectByIDs(StudentIDList);
+            List<StudentRecord> allStudents = K12.Data.Student.SelectByIDs(StudentIDList);
 
             int maxStudents = 0;
             int totalStudent = allStudents.Count;
@@ -280,7 +287,7 @@ namespace 德行成績試算表
                 {
                     if (periodDic.ContainsKey(_Period.Period))
                     {
-                        string typename = periodDic[_Period.Period] + "_" + _Period.AbsenceType;
+                        string typename = periodDic[_Period.Period] + _Period.AbsenceType;
                         if (rr.Attendance.ContainsKey(typename))
                         {
                             rr.Attendance[typename]++;
@@ -316,7 +323,9 @@ namespace 德行成績試算表
             SmartSchool.Customization.Data.SystemInformation.getField("文字評量對照表");
             System.Xml.XmlElement ElmTextScoreList = (System.Xml.XmlElement)SmartSchool.Customization.Data.SystemInformation.Fields["文字評量對照表"];
             foreach (System.Xml.XmlNode Node in ElmTextScoreList.SelectNodes("Content/Morality"))
+            {
                 TextScoreList.Add(Node.Attributes["Face"].InnerText);
+            }
 
             #endregion
 
@@ -324,50 +333,35 @@ namespace 德行成績試算表
 
             BGW.ReportProgress(50, "產生報表樣式");
 
-            Workbook template = new Workbook();
-            Workbook prototype = new Workbook();
-
-            //列印尺寸
-            if (sizeIndex == 0)
-                template.Open(new MemoryStream(Properties.Resources.德行表現總表新制A3), FileFormatType.Excel2003);
-            else if (sizeIndex == 1)
-                template.Open(new MemoryStream(Properties.Resources.德行表現總表新制A4), FileFormatType.Excel2003);
-            else if (sizeIndex == 2)
-                template.Open(new MemoryStream(Properties.Resources.德行表現總表新制B4), FileFormatType.Excel2003);
-
-            prototype.Copy(template);
-
-            Worksheet templateSheet = template.Worksheets[0];
-            Worksheet prototypeSheet = prototype.Worksheets[0];
-
-            Aspose.Cells.Range tempAbsence = templateSheet.Cells.CreateRange(9, 1, true);
-            Aspose.Cells.Range tempScoreText = templateSheet.Cells.CreateRange(10, 1, true);
-            Aspose.Cells.Range tempAfterOtherDiff = templateSheet.Cells.CreateRange(11, 1, true);
-            Aspose.Cells.Range oder = templateSheet.Cells.CreateRange(12, 1, true);
-
-            Dictionary<string, int> columnIndexTable = new Dictionary<string, int>();
+            //單頁範本
+            Document _template = new Document(new MemoryStream(Properties.Resources.高中_日常生活表現_班級_a3));
 
             Dictionary<string, List<string>> periodAbsence = new Dictionary<string, List<string>>();
 
-            //紀錄獎懲的 Column Index
-            columnIndexTable.Add("大功", 3);
-            columnIndexTable.Add("小功", 4);
-            columnIndexTable.Add("嘉獎", 5);
-            columnIndexTable.Add("大過", 6);
-            columnIndexTable.Add("小過", 7);
-            columnIndexTable.Add("警告", 8);
 
+            //New
             List<string> nameList = new List<string>();
             List<string> valueList = new List<string>();
-
             nameList.Add("學校名稱");
             valueList.Add(School.ChineseName);
+            nameList.Add("列印日期");
+            valueList.Add(DateTime.Today.ToString("yyyy/MM/dd"));
 
-            //缺曠
-            int ptColIndex = 9;
+            nameList.Add("學年度");
+            valueList.Add("" + _Schoolyear);
+
+            nameList.Add("學期");
+            valueList.Add(((_Semester == 1) ? "上" : "下") + " 學期");
+
+
             int nameIndex = 1;
+            int varIndex = 1;
             foreach (string var in UserType.Keys)
             {
+                //New
+                nameList.Add("節次類型" + varIndex);
+                valueList.Add(var);
+
                 foreach (string absence in UserType[var])
                 {
                     if (!periodAbsence.ContainsKey(var))
@@ -375,79 +369,36 @@ namespace 德行成績試算表
                     if (!periodAbsence[var].Contains(absence))
                         periodAbsence[var].Add(absence);
 
-                    prototypeSheet.Cells.CreateRange(ptColIndex, 1, true).Copy(tempAbsence);
-                    ptColIndex += 1;
-
-                    nameList.Add("缺曠類型"+ nameIndex);
-                    valueList.Add(var + nameIndex+ absence+ nameIndex);
+                    //New
+                    nameList.Add(var + varIndex + absence + nameIndex);
+                    valueList.Add(var + absence);
+                    nameIndex++;
                 }
+                varIndex++;
             }
 
-            ptColIndex = 9;
-            foreach (string period in periodAbsence.Keys)
-            {
-                prototypeSheet.Cells.CreateRange(2, ptColIndex, 2, periodAbsence[period].Count).Merge();
-                prototypeSheet.Cells[2, ptColIndex].PutValue(period);
-
-                foreach (string absence in periodAbsence[period])
-                {
-                    prototypeSheet.Cells[4, ptColIndex].PutValue(absence);
-                    columnIndexTable.Add(period + "_" + absence, ptColIndex);
-                    ptColIndex++;
-                }
-            }
-
-            if (ptColIndex > 9)
-            {
-                prototypeSheet.Cells.CreateRange(1, 9, 1, ptColIndex - 9).Merge();
-                prototypeSheet.Cells[1, 9].PutValue("缺曠");
-            }
-
-            //用來調整Column寬度的定位
-            int ColumnMax = ptColIndex;
+            //foreach (string period in periodAbsence.Keys)
+            //{
+            //    prototypeSheet.Cells.CreateRange(2, ptColIndex, 2, periodAbsence[period].Count).Merge();
+            //    prototypeSheet.Cells[2, ptColIndex].PutValue(period);
+            //
+            //    foreach (string absence in periodAbsence[period])
+            //    {
+            //        prototypeSheet.Cells[4, ptColIndex].PutValue(absence);
+            //        columnIndexTable.Add(period + absence, ptColIndex);
+            //        ptColIndex++;
+            //    }
+            //}
 
             //文字評量
+            int textscoreIndex = 1;
             foreach (string textscore in TextScoreList)
             {
-                columnIndexTable.Add(textscore, ptColIndex);
-                prototypeSheet.Cells.CreateRange(ptColIndex, 1, true).Copy(tempScoreText);
-                prototypeSheet.Cells[4, ptColIndex].PutValue(textscore);
-                ptColIndex++;
+                //New
+                nameList.Add("評語標題" + textscoreIndex);
+                valueList.Add(textscore);
+                textscoreIndex++;
             }
-
-            prototypeSheet.Cells[1, ptColIndex - TextScoreList.Count].PutValue("學生綜合表現");
-
-            if ((ptColIndex - TextScoreList.Count > 0) && (TextScoreList.Count > 0))
-            {
-                prototypeSheet.Cells.CreateRange(1, ptColIndex - TextScoreList.Count, 3, TextScoreList.Count).Merge();
-            }
-
-            prototypeSheet.Cells.CreateRange(ptColIndex, 1, true).Copy(tempAfterOtherDiff);
-            columnIndexTable.Add("評語", ptColIndex++);
-            prototypeSheet.Cells.CreateRange(ptColIndex, 1, true).Copy(oder);
-            columnIndexTable.Add("是否留察", ptColIndex++);
-
-            //填入製表日期
-            prototypeSheet.Cells[0, 0].PutValue("製表日期：" + DateTime.Today.ToShortDateString());
-
-            //填入標題
-            prototypeSheet.Cells.CreateRange(0, 3, 1, ptColIndex - 3).Merge();
-            prototypeSheet.Cells[0, 3].PutValue(K12.Data.School.ChineseName + " " + _Schoolyear + " 學年度 " + ((_Semester == 1) ? "上" : "下") + " 學期 日常表現記錄表（新制）");
-
-            Aspose.Cells.Range ptEachRow = prototypeSheet.Cells.CreateRange(5, 1, false);
-
-            for (int i = 5; i < maxStudents + 5; i++)
-            {
-                prototypeSheet.Cells.CreateRange(i, 1, false).Copy(ptEachRow);
-            }
-
-            //加上底線
-            prototypeSheet.Cells.CreateRange(maxStudents + 5, 0, 1, ptColIndex).SetOutlineBorder(Aspose.Cells.BorderType.TopBorder, CellBorderType.Medium, System.Drawing.Color.Black);
-
-            for (int i = 12; i >= ptColIndex; i--)
-                prototypeSheet.Cells.DeleteColumn(i);
-
-            Aspose.Cells.Range pt = prototypeSheet.Cells.CreateRange(0, maxStudents + 5, false);
 
             #endregion
 
@@ -456,12 +407,7 @@ namespace 德行成績試算表
             BGW.ReportProgress(53, "填入報表資料");
 
 
-            Workbook wb = new Workbook();
-            wb.Copy(prototype);
-            Worksheet ws = wb.Worksheets[0];
-
             int index = 0;
-            int dataIndex = 0;
             int classTotalRow = maxStudents + 5;
 
             BGW.ReportProgress(57, "填入老師姓名");
@@ -503,27 +449,12 @@ namespace 德行成績試算表
 
             BGW.ReportProgress(70, "開始列印資料");
 
-            int PeogressNow1 = totalStudent / 30;
-            int PeogressNow2 = 0;
-            int PeogressNow3 = 70;
+
 
             foreach (ClassRecord aClass in allClasses)
             {
-                //電子報表用
-                #region 電子報表用
-
-                Workbook Paper_wb = new Workbook();
-                Paper_wb.Copy(prototype);
-                Worksheet Paper_ws = Paper_wb.Worksheets[0];
-
-                int Paper_index = 0;
-                int Paper_dataIndex = 0;
-                int Paper_classTotalRow = maxStudents + 5;
-
-                int Paper_PeogressNow1 = totalStudent / 30;
-
-
-                #endregion
+                //每一張每一份
+                Document PageOne = (Document)_template.Clone(true);
 
                 if (!classStudents.ContainsKey(aClass.ID))
                     continue;
@@ -534,39 +465,23 @@ namespace 德行成績試算表
                     TeacherName = TeacherDic[aClass.ID];
                 }
 
-                //複製完成後的樣板
-                ws.Cells.CreateRange(index, classTotalRow, false).Copy(pt);
-                Paper_ws.Cells.CreateRange(Paper_index, Paper_classTotalRow, false).Copy(pt);
+                nameList.Add("班級");
+                valueList.Add(aClass.Name);
 
-                //填入班級名稱
-                ws.Cells[index + 1, 0].PutValue("班級：" + aClass.Name);
-                Paper_ws.Cells[Paper_index + 1, 0].PutValue("班級：" + aClass.Name);
+                nameList.Add("教師");
+                valueList.Add(TeacherName);
 
-                //填入老師名稱
-                ws.Cells[index + 3, 0].PutValue("教師：" + TeacherName);
-                Paper_ws.Cells[Paper_index + 3, 0].PutValue("教師：" + TeacherName);
-
-                dataIndex = index + 5;
-                Paper_dataIndex = Paper_index + 5;
-
+                int aStudentIndex = 1;
                 foreach (StudentRecord aStudent in classStudents[aClass.ID])
                 {
-                    PeogressNow2++;
 
-                    if (PeogressNow2 > PeogressNow1 && PeogressNow3 < 101)
-                    {
-                        PeogressNow3++;
-                        PeogressNow2 = 0;
-                        BGW.ReportProgress(PeogressNow3, "開始列印資料");
-                    }
+                    nameList.Add("座號" + aStudentIndex);
+                    valueList.Add("" + aStudent.SeatNo);
+                    nameList.Add("姓名" + aStudentIndex);
+                    valueList.Add(aStudent.Name);
+                    nameList.Add("學號" + aStudentIndex);
+                    valueList.Add(aStudent.StudentNumber);
 
-                    ws.Cells[dataIndex, 0].PutValue(aStudent.SeatNo);
-                    ws.Cells[dataIndex, 1].PutValue(aStudent.Name);
-                    ws.Cells[dataIndex, 2].PutValue(aStudent.StudentNumber);
-
-                    Paper_ws.Cells[Paper_dataIndex, 0].PutValue(aStudent.SeatNo);
-                    Paper_ws.Cells[Paper_dataIndex, 1].PutValue(aStudent.Name);
-                    Paper_ws.Cells[Paper_dataIndex, 2].PutValue(aStudent.StudentNumber);
                     // 2018/01/17 羿均
                     // MeritDemeritAttDic 為當學年度學期 缺曠獎懲資料
                     // TotalMeritDemeritDic 為獎懲累計資料
@@ -581,124 +496,164 @@ namespace 德行成績試算表
                         {
                             RewardRecord totalRecord = TotalMeritDemeritDic[aStudent.ID];
 
-                            ws.Cells[dataIndex, columnIndexTable["大功"]].PutValue(rr.MeritACount + " / " + totalRecord.MeritACount);
-                            ws.Cells[dataIndex, columnIndexTable["小功"]].PutValue(rr.MeritBCount + " / " + totalRecord.MeritBCount);
-                            ws.Cells[dataIndex, columnIndexTable["嘉獎"]].PutValue(rr.MeritCCount + " / " + totalRecord.MeritCCount);
-                            ws.Cells[dataIndex, columnIndexTable["大過"]].PutValue(rr.DemeritACount + " / " + totalRecord.DemeritACount);
-                            ws.Cells[dataIndex, columnIndexTable["小過"]].PutValue(rr.DemeritBCount + " / " + totalRecord.DemeritBCount);
-                            ws.Cells[dataIndex, columnIndexTable["警告"]].PutValue(rr.DemeritCCount + " / " + totalRecord.DemeritCCount);
+                            nameList.Add("大功學期" + aStudentIndex);
+                            valueList.Add("" + rr.MeritACount);
+                            nameList.Add("大功累積" + aStudentIndex);
+                            valueList.Add("" + totalRecord.MeritACount);
 
-                            Paper_ws.Cells[Paper_dataIndex, columnIndexTable["大功"]].PutValue(rr.MeritACount + " / " + totalRecord.MeritACount);
-                            Paper_ws.Cells[Paper_dataIndex, columnIndexTable["小功"]].PutValue(rr.MeritBCount + " / " + totalRecord.MeritBCount);
-                            Paper_ws.Cells[Paper_dataIndex, columnIndexTable["嘉獎"]].PutValue(rr.MeritCCount + " / " + totalRecord.MeritCCount);
-                            Paper_ws.Cells[Paper_dataIndex, columnIndexTable["大過"]].PutValue(rr.DemeritACount + " / " + totalRecord.DemeritACount);
-                            Paper_ws.Cells[Paper_dataIndex, columnIndexTable["小過"]].PutValue(rr.DemeritBCount + " / " + totalRecord.DemeritBCount);
-                            Paper_ws.Cells[Paper_dataIndex, columnIndexTable["警告"]].PutValue(rr.DemeritCCount + " / " + totalRecord.DemeritCCount);
+                            nameList.Add("小功學期" + aStudentIndex);
+                            valueList.Add("" + rr.MeritBCount);
+                            nameList.Add("小功累積" + aStudentIndex);
+                            valueList.Add("" + totalRecord.MeritBCount);
+
+                            nameList.Add("嘉獎學期" + aStudentIndex);
+                            valueList.Add("" + rr.MeritCCount);
+                            nameList.Add("嘉獎累積" + aStudentIndex);
+                            valueList.Add("" + totalRecord.MeritCCount);
+
+                            nameList.Add("大過學期" + aStudentIndex);
+                            valueList.Add("" + rr.DemeritACount);
+                            nameList.Add("大過累積" + aStudentIndex);
+                            valueList.Add("" + totalRecord.DemeritACount);
+
+                            nameList.Add("小過學期" + aStudentIndex);
+                            valueList.Add("" + rr.DemeritBCount);
+                            nameList.Add("小過累積" + aStudentIndex);
+                            valueList.Add("" + totalRecord.DemeritBCount);
+
+                            nameList.Add("警告學期" + aStudentIndex);
+                            valueList.Add("" + rr.DemeritCCount);
+                            nameList.Add("警告累積" + aStudentIndex);
+                            valueList.Add("" + totalRecord.DemeritCCount);
+
                         }
                         else
                         {
                             //有缺曠沒獎懲，要印獎懲0/0
                             //https://3.basecamp.com/4399967/buckets/15765350/todos/4520462594
-                            ws.Cells[dataIndex, columnIndexTable["大功"]].PutValue("0 / 0");
-                            ws.Cells[dataIndex, columnIndexTable["小功"]].PutValue("0 / 0");
-                            ws.Cells[dataIndex, columnIndexTable["嘉獎"]].PutValue("0 / 0");
-                            ws.Cells[dataIndex, columnIndexTable["大過"]].PutValue("0 / 0");
-                            ws.Cells[dataIndex, columnIndexTable["小過"]].PutValue("0 / 0");
-                            ws.Cells[dataIndex, columnIndexTable["警告"]].PutValue("0 / 0");
 
-                            Paper_ws.Cells[Paper_dataIndex, columnIndexTable["大功"]].PutValue("0 / 0");
-                            Paper_ws.Cells[Paper_dataIndex, columnIndexTable["小功"]].PutValue("0 / 0");
-                            Paper_ws.Cells[Paper_dataIndex, columnIndexTable["嘉獎"]].PutValue("0 / 0");
-                            Paper_ws.Cells[Paper_dataIndex, columnIndexTable["大過"]].PutValue("0 / 0");
-                            Paper_ws.Cells[Paper_dataIndex, columnIndexTable["小過"]].PutValue("0 / 0");
-                            Paper_ws.Cells[Paper_dataIndex, columnIndexTable["警告"]].PutValue("0 / 0");
+                            nameList.Add("大功學期" + aStudentIndex);
+                            valueList.Add("0");
+                            nameList.Add("大功累積" + aStudentIndex);
+                            valueList.Add("0");
+
+                            nameList.Add("小功學期" + aStudentIndex);
+                            valueList.Add("0");
+                            nameList.Add("小功累積" + aStudentIndex);
+                            valueList.Add("0");
+
+                            nameList.Add("嘉獎學期" + aStudentIndex);
+                            valueList.Add("0");
+                            nameList.Add("嘉獎累積" + aStudentIndex);
+                            valueList.Add("0");
+
+                            nameList.Add("大過學期" + aStudentIndex);
+                            valueList.Add("0");
+                            nameList.Add("大過累積" + aStudentIndex);
+                            valueList.Add("0");
+
+                            nameList.Add("小過學期" + aStudentIndex);
+                            valueList.Add("0");
+                            nameList.Add("小過累積" + aStudentIndex);
+                            valueList.Add("0");
+
+                            nameList.Add("警告學期" + aStudentIndex);
+                            valueList.Add("0");
+                            nameList.Add("警告累積" + aStudentIndex);
+                            valueList.Add("0");
                         }
+
+                        //缺曠
+                        int attendanceIndex = 1;
                         foreach (string each in rr.Attendance.Keys)
                         {
-                            if (columnIndexTable.ContainsKey(each))
-                            {
-                                ws.Cells[dataIndex, columnIndexTable[each]].PutValue(rr.Attendance[each]);
-                                Paper_ws.Cells[Paper_dataIndex, columnIndexTable[each]].PutValue(rr.Attendance[each]);
-                            }
+                            nameList.Add(each + attendanceIndex);
+                            valueList.Add("" + rr.Attendance[each]);
                         }
                     }
                     else
                     {
                         //沒缺曠沒獎懲，要印獎懲0/0
                         // https://3.basecamp.com/4399967/buckets/15765350/todos/4520462594
-                        ws.Cells[dataIndex, columnIndexTable["大功"]].PutValue("0 / 0");
-                        ws.Cells[dataIndex, columnIndexTable["小功"]].PutValue("0 / 0");
-                        ws.Cells[dataIndex, columnIndexTable["嘉獎"]].PutValue("0 / 0");
-                        ws.Cells[dataIndex, columnIndexTable["大過"]].PutValue("0 / 0");
-                        ws.Cells[dataIndex, columnIndexTable["小過"]].PutValue("0 / 0");
-                        ws.Cells[dataIndex, columnIndexTable["警告"]].PutValue("0 / 0");
+                        nameList.Add("大功學期" + aStudentIndex);
+                        valueList.Add("0");
+                        nameList.Add("大功累積" + aStudentIndex);
+                        valueList.Add("0");
 
-                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["大功"]].PutValue("0 / 0");
-                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["小功"]].PutValue("0 / 0");
-                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["嘉獎"]].PutValue("0 / 0");
-                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["大過"]].PutValue("0 / 0");
-                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["小過"]].PutValue("0 / 0");
-                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["警告"]].PutValue("0 / 0");
+                        nameList.Add("小功學期" + aStudentIndex);
+                        valueList.Add("0");
+                        nameList.Add("小功累積" + aStudentIndex);
+                        valueList.Add("0");
+
+                        nameList.Add("嘉獎學期" + aStudentIndex);
+                        valueList.Add("0");
+                        nameList.Add("嘉獎累積" + aStudentIndex);
+                        valueList.Add("0");
+
+                        nameList.Add("大過學期" + aStudentIndex);
+                        valueList.Add("0");
+                        nameList.Add("大過累積" + aStudentIndex);
+                        valueList.Add("0");
+
+                        nameList.Add("小過學期" + aStudentIndex);
+                        valueList.Add("0");
+                        nameList.Add("小過累積" + aStudentIndex);
+                        valueList.Add("0");
+
+                        nameList.Add("警告學期" + aStudentIndex);
+                        valueList.Add("0");
+                        nameList.Add("警告累積" + aStudentIndex);
+                        valueList.Add("0");
                     }
 
                     //文字評量部份
                     SHMoralScoreRecord demonScore;
+
                     if (SHMoralScoreDic.ContainsKey(aStudent.ID))
                     {
                         demonScore = SHMoralScoreDic[aStudent.ID];
 
                         //文字評量
                         XmlElement xml = demonScore.TextScore;
+                        int demonScoreIndex = 1;
                         foreach (XmlElement each in xml.SelectNodes("Morality"))
                         {
                             string strFace = each.GetAttribute("Face");
-                            if (columnIndexTable.ContainsKey(strFace))
+
+                            if (TextScoreList.Contains(strFace))
                             {
-                                int colIndex = columnIndexTable[strFace];
-                                ws.Cells[dataIndex, colIndex].PutValue(each.InnerText);
-                                Paper_ws.Cells[Paper_dataIndex, colIndex].PutValue(each.InnerText);
+                                nameList.Add("評語" + demonScoreIndex + "學生" + aStudentIndex);
+                                valueList.Add(each.InnerText);
+                                demonScoreIndex++;
                             }
                         }
 
                         //導師評語
-                        ws.Cells[dataIndex, columnIndexTable["評語"]].PutValue(demonScore.Comment);
-                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["評語"]].PutValue(demonScore.Comment);
+                        nameList.Add("導師評語" + aStudentIndex);
+                        valueList.Add(demonScore.Comment);
                     }
 
                     //留察
                     if (MeritFlagIs2.Contains(aStudent.ID))
                     {
-                        ws.Cells[dataIndex, columnIndexTable["是否留察"]].PutValue("是");
-                        Paper_ws.Cells[Paper_dataIndex, columnIndexTable["是否留察"]].PutValue("是");
+                        nameList.Add("是否留察" + aStudentIndex);
+                        valueList.Add("是");
                     }
 
-                    foreach (int each in columnIndexTable.Values)
-                    {
-                        if (each >= ColumnMax)
-                        {
-                            Paper_ws.AutoFitColumn(each);
-                        }
-                    }
-
-                    dataIndex++;
-                    Paper_dataIndex++;
+                    //下一位學生
+                    aStudentIndex++;
                 }
 
+                PageOne.MailMerge.Execute(nameList.ToArray(), valueList.ToArray());
+                PageOne.MailMerge.DeleteFields();
                 //電子報表
-                MemoryStream stream = Paper_wb.SaveToStream();
-                paperForClass.Append(new PaperItem(PaperFormat.Office2003Xls, stream, aClass.ID));
+                MemoryStream stream = new MemoryStream();
+                PageOne.Save(stream, SaveFormat.Docx);
+                paperForClass.Append(new PaperItem(PaperFormat.Office2003Doc, stream, aClass.ID));
 
-                index += classTotalRow + 2;
-                ws.HPageBreaks.Add(index, ptColIndex);
+                _doc.Sections.Add(_doc.ImportNode(PageOne.FirstSection, true));
             }
 
-            foreach (int each in columnIndexTable.Values)
-            {
-                if (each >= ColumnMax)
-                {
-                    ws.AutoFitColumn(each);
-                }
-            }
             #endregion
             if (Carty_paper)
             {
@@ -707,7 +662,7 @@ namespace 德行成績試算表
             }
 
             BGW.ReportProgress(100, "資料列印完成");
-            e.Result = wb;
+            e.Result = _doc;
         }
 
 
@@ -721,7 +676,7 @@ namespace 德行成績試算表
             if (e.Error == null)
             {
                 FISCA.Presentation.MotherForm.SetStatusBarMessage("日常表現記錄表（新制）列印完成");
-                Completed.Save("日常表現記錄表（新制）", (Workbook)e.Result);
+                Completed.SaveDoc("日常表現記錄表（新制）", (Document)e.Result);
             }
             else
             {
@@ -819,7 +774,7 @@ namespace 德行成績試算表
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Title = "另存新檔";
-            sfd.FileName = "日常生活表現_班級_功能變數總表.docx";
+            sfd.FileName = string.Format("日常生活表現_班級_功能變數總表_{0}.docx", DateTime.Now.ToString("HHmmss"));
             sfd.Filter = "Word檔案 (*.docx)|*.docx|所有檔案 (*.*)|*.*";
             if (sfd.ShowDialog() == DialogResult.OK)
             {

@@ -704,7 +704,7 @@ namespace 德行成績試算表
             if (e.Error == null)
             {
                 FISCA.Presentation.MotherForm.SetStatusBarMessage("日常表現記錄表（新制）列印完成");
-                Completed.Save("日常表現記錄表（新制）", (Workbook)e.Result);
+                Completed.SaveExcel("日常表現記錄表（新制）", (Workbook)e.Result);
             }
             else
             {

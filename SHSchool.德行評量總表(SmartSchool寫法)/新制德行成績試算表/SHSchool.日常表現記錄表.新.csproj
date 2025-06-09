@@ -68,6 +68,10 @@
       <HintPath>Library\Aspose.Cells.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Aspose.Words_201402">
+      <HintPath>Library\Aspose.Words_201402.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Campus.Configuration, Version=1.0.0.5, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Library\Campus.Configuration.dll</HintPath>
