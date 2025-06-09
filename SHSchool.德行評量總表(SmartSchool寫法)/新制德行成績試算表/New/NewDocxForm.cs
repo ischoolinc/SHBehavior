@@ -287,6 +287,17 @@ namespace 德行成績試算表
                 {
                     if (periodDic.ContainsKey(_Period.Period))
                     {
+                        string typePeriod = periodDic[_Period.Period];
+                        if (!rr.typeAttendance.ContainsKey(typePeriod))
+                        {
+                            rr.typeAttendance.Add(typePeriod, new Dictionary<string, int>());
+                        }
+                        if (!rr.typeAttendance[typePeriod].ContainsKey(_Period.AbsenceType))
+                        {
+                            rr.typeAttendance[typePeriod].Add(_Period.AbsenceType, 0);
+                        }
+                        rr.typeAttendance[typePeriod][_Period.AbsenceType]++;
+
                         string typename = periodDic[_Period.Period] + _Period.AbsenceType;
                         if (rr.Attendance.ContainsKey(typename))
                         {
@@ -370,7 +381,7 @@ namespace 德行成績試算表
                         periodAbsence[var].Add(absence);
 
                     //New
-                    nameList.Add(var + varIndex + absence + nameIndex);
+                    nameList.Add("節次類型" + varIndex + "缺曠" + nameIndex);
                     valueList.Add(var + absence);
                     nameIndex++;
                 }
@@ -564,11 +575,17 @@ namespace 德行成績試算表
                         }
 
                         //缺曠
-                        int attendanceIndex = 1;
-                        foreach (string each in rr.Attendance.Keys)
+                        int typeIndex = 1;
+                        foreach (string type in rr.typeAttendance.Keys)
                         {
-                            nameList.Add(each + attendanceIndex);
-                            valueList.Add("" + rr.Attendance[each]);
+                            int attendIndex = 1;
+                            foreach (string attend in rr.typeAttendance[type].Keys)
+                            {
+                                nameList.Add("節次類型" + typeIndex + "缺曠" + attendIndex + "學生" + aStudentIndex);
+                                valueList.Add("" + rr.typeAttendance[type][attend]);
+                                attendIndex++;
+                            }
+                            typeIndex++;
                         }
                     }
                     else
@@ -646,6 +663,7 @@ namespace 德行成績試算表
 
                 PageOne.MailMerge.Execute(nameList.ToArray(), valueList.ToArray());
                 PageOne.MailMerge.DeleteFields();
+
                 //電子報表
                 MemoryStream stream = new MemoryStream();
                 PageOne.Save(stream, SaveFormat.Docx);

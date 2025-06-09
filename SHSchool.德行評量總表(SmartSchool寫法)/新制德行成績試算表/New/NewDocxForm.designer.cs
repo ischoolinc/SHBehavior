@@ -47,7 +47,7 @@
             // 
             this.linkPrint.AutoSize = true;
             this.linkPrint.BackColor = System.Drawing.Color.Transparent;
-            this.linkPrint.Location = new System.Drawing.Point(12, 171);
+            this.linkPrint.Location = new System.Drawing.Point(9, 171);
             this.linkPrint.Name = "linkPrint";
             this.linkPrint.Size = new System.Drawing.Size(60, 17);
             this.linkPrint.TabIndex = 6;
@@ -59,7 +59,7 @@
             // 
             this.linkType.AutoSize = true;
             this.linkType.BackColor = System.Drawing.Color.Transparent;
-            this.linkType.Location = new System.Drawing.Point(76, 171);
+            this.linkType.Location = new System.Drawing.Point(72, 171);
             this.linkType.Name = "linkType";
             this.linkType.Size = new System.Drawing.Size(60, 17);
             this.linkType.TabIndex = 7;
@@ -195,7 +195,7 @@
             // 
             this.linkLabel1.AutoSize = true;
             this.linkLabel1.BackColor = System.Drawing.Color.Transparent;
-            this.linkLabel1.Location = new System.Drawing.Point(140, 171);
+            this.linkLabel1.Location = new System.Drawing.Point(135, 171);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(86, 17);
             this.linkLabel1.TabIndex = 16;

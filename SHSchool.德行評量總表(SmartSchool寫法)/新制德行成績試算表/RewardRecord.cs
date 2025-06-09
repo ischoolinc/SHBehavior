@@ -39,6 +39,9 @@ namespace 德行成績試算表
         public Dictionary<string, int> Attendance = new Dictionary<string, int>();
 
 
-
+        /// <summary>
+        /// 缺曠資料
+        /// </summary>
+        public Dictionary<string, Dictionary<string, int>> typeAttendance = new Dictionary<string, Dictionary<string, int>>();
     }
 }
