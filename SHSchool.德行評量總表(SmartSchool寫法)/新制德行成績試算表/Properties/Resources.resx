@@ -133,4 +133,7 @@
   <data name="高中_日常生活表現_班級_a3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\高中_日常生活表現_班級_a3.docx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="高中_日常生活表現_班級_版本2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\高中_日常生活表現_班級_版本2.docx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

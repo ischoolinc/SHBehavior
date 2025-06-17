@@ -196,6 +196,12 @@
     <Compile Include="New\NewDocxForm.designer.cs">
       <DependentUpon>NewDocxForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="New\SettingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="New\SettingForm.Designer.cs">
+      <DependentUpon>SettingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Permissions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -225,6 +231,9 @@
     <EmbeddedResource Include="New\NewDocxForm.resx">
       <DependentUpon>NewDocxForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="New\SettingForm.resx">
+      <DependentUpon>SettingForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
@@ -245,6 +254,7 @@
     <None Include="Resources\德行表現總表新制B4.xls" />
     <None Include="Resources\日常生活表現總表_功能變數總表.docx" />
     <None Include="Resources\高中_日常生活表現_班級_a3.docx" />
+    <None Include="Resources\高中_日常生活表現_班級_版本2.docx" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -276,42 +286,31 @@
   <ItemGroup>
     <Content Include="Library\Aspose.Cells.dll" />
     <Content Include="Library\Aspose.Cells.xml" />
+    <Content Include="Library\Aspose.Words_201402.dll" />
     <Content Include="Library\Campus.Configuration.dll" />
-    <Content Include="Library\Campus.Configuration.pdb" />
     <Content Include="Library\DevComponents.DotNetBar2.dll" />
     <Content Include="Library\FISCA.Data.dll" />
-    <Content Include="Library\FISCA.Data.pdb" />
     <Content Include="Library\FISCA.Data.xml" />
     <Content Include="Library\FISCA.dll" />
     <Content Include="Library\FISCA.DSAUtil.dll" />
-    <Content Include="Library\FISCA.DSAUtil.pdb" />
     <Content Include="Library\FISCA.DSAUtil.xml" />
-    <Content Include="Library\FISCA.pdb" />
     <Content Include="Library\FISCA.Permission.dll" />
-    <Content Include="Library\FISCA.Permission.pdb" />
     <Content Include="Library\FISCA.Permission.xml" />
     <Content Include="Library\FISCA.Presentation.dll" />
-    <Content Include="Library\FISCA.Presentation.pdb" />
     <Content Include="Library\FISCA.Presentation.xml" />
     <Content Include="Library\FISCA.UDT.dll" />
-    <Content Include="Library\FISCA.UDT.pdb" />
     <Content Include="Library\FISCA.UDT.xml" />
     <Content Include="Library\K12.Data.dll" />
-    <Content Include="Library\K12.Data.pdb" />
     <Content Include="Library\K12.Data.xml" />
     <Content Include="Library\K12.Presentation.dll" />
     <Content Include="Library\K12.Presentation.xml" />
     <Content Include="Library\SHSchool.Data.dll" />
-    <Content Include="Library\SHSchool.Data.pdb" />
     <Content Include="Library\SHSchool.Data.xml" />
     <Content Include="Library\SmartSchool.Common.dll" />
     <Content Include="Library\SmartSchool.Common.DotNetBar.dll" />
-    <Content Include="Library\SmartSchool.Common.DotNetBar.pdb" />
     <Content Include="Library\SmartSchool.Common.DotNetBar.xml" />
-    <Content Include="Library\SmartSchool.Common.pdb" />
     <Content Include="Library\SmartSchool.Common.xml" />
     <Content Include="Library\SmartSchool.Core.dll" />
-    <Content Include="Library\SmartSchool.Core.pdb" />
     <Content Include="Library\SmartSchool.Customization.Data.dll" />
     <Content Include="Library\SmartSchool.Customization.Data.xml" />
     <Content Include="Library\SmartSchool.Customization.PlugIn.dll" />
@@ -319,7 +318,6 @@
     <Content Include="Library\SmartSchool.ePaper.dll" />
     <Content Include="Library\SmartSchool.ePaper.xml" />
     <Content Include="Library\SmartSchool.ErrorReporting.dll" />
-    <Content Include="Library\SmartSchool.ErrorReporting.pdb" />
     <Content Include="Library\SmartSchool.ErrorReporting.xml" />
     <Content Include="日常表現記錄表%28新制%29.txt" />
   </ItemGroup>

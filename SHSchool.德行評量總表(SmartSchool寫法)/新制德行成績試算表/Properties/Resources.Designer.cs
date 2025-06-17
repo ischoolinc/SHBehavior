@@ -109,5 +109,15 @@ namespace 德行成績試算表.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   查詢類型 System.Byte[] 的當地語系化資源。
+        /// </summary>
+        internal static byte[] 高中_日常生活表現_班級_版本2 {
+            get {
+                object obj = ResourceManager.GetObject("高中_日常生活表現_班級_版本2", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

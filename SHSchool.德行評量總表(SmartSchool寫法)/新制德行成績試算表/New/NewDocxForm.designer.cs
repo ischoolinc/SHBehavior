@@ -38,7 +38,6 @@
             this.lbSchoolYear = new DevComponents.DotNetBar.LabelX();
             this.lbSemester = new DevComponents.DotNetBar.LabelX();
             this.checkBoxX1 = new DevComponents.DotNetBar.Controls.CheckBoxX();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.intSchoolYear)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.intSemester)).BeginInit();
             this.SuspendLayout();
@@ -191,24 +190,11 @@
             this.checkBoxX1.Text = "產生班級電子報表";
             this.checkBoxX1.TextColor = System.Drawing.Color.Red;
             // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.BackColor = System.Drawing.Color.Transparent;
-            this.linkLabel1.Location = new System.Drawing.Point(135, 171);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(86, 17);
-            this.linkLabel1.TabIndex = 16;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "功能變數總表";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
-            // 
             // NewDocxForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(397, 200);
-            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.checkBoxX1);
             this.Controls.Add(this.lbSemester);
             this.Controls.Add(this.lbSchoolYear);
@@ -242,6 +228,5 @@
         private DevComponents.DotNetBar.LabelX lbSchoolYear;
         private DevComponents.DotNetBar.LabelX lbSemester;
         private DevComponents.DotNetBar.Controls.CheckBoxX checkBoxX1;
-        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }

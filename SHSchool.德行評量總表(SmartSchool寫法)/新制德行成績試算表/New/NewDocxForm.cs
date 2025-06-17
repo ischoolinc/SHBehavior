@@ -1,21 +1,24 @@
-﻿using System;
+﻿using Aspose.Words;
+using DevComponents.Editors.DateTimeAdv;
+using FISCA.Data;
+using FISCA.DSAUtil;
+using FISCA.Presentation.Controls;
+using K12.Data;
+using K12.Data.Configuration;
+using SHSchool.Data;
+using SmartSchool.ePaper;
+using SmartSchool.Feature.Student;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using FISCA.Presentation.Controls;
-using FISCA.DSAUtil;
 using System.Xml;
-using System.IO;
-using K12.Data;
-using SHSchool.Data;
-using SmartSchool.ePaper;
-using Aspose.Words;
-using System.Diagnostics;
-using SmartSchool.Feature.Student;
 
 namespace 德行成績試算表
 {
@@ -36,17 +39,11 @@ namespace 德行成績試算表
 
         bool Carty_paper = false;
 
-        int _Schoolyear = 90;
+        int _Schoolyear = 110;
         int _Semester = 1;
-        int SizeIndex = 0;
         Dictionary<string, List<string>> Type = null;
 
         FISCA.Data.QueryHelper _QueryHelper = new FISCA.Data.QueryHelper();
-
-        /// <summary>
-        /// 目前僅記錄列印紙張尺寸
-        /// </summary>
-        public string ConfigPrint = "日常表現記錄表_新制_列印設定";
 
         /// <summary>
         /// XML結構之設定檔
@@ -55,9 +52,39 @@ namespace 德行成績試算表
 
         BackgroundWorker BGW;
 
+        string ConfigName = "日常生活表現總表.班級.2025";
+
+        private string _useDefaultTemplate = "範本1";
+        private byte[] _buffer = null;
+        private MemoryStream _template = null;
+        public MemoryStream Template
+        {
+            get
+            {
+                MemoryStream _defaultTemplate;
+
+                if (_useDefaultTemplate == "自訂範本")
+                {
+                    return _template;
+                }
+                else if (_useDefaultTemplate == "範本2")
+                {
+                    return _defaultTemplate = new MemoryStream(Properties.Resources.高中_日常生活表現_班級_版本2);
+                }
+                else //範本1 
+                {
+                    return _defaultTemplate = new MemoryStream(Properties.Resources.高中_日常生活表現_班級_a3);
+                }
+            }
+        }
+
+        ConfigData cd { get; set; }
+
         public NewDocxForm()
         {
             InitializeComponent();
+
+            LoadPreference();
         }
 
         private void NewForm_Load(object sender, EventArgs e)
@@ -101,11 +128,7 @@ namespace 德行成績試算表
             _doc = new Document();
             _doc.Sections.Clear(); //清空此Document
 
-            BGW.ReportProgress(1, "取得紙張設定");
-            //取得列印紙張
-            int sizeIndex = GetSizeIndex();
-
-            BGW.ReportProgress(4, "取得假別設定");
+            BGW.ReportProgress(1, "取得假別設定");
             //取得列印假別內容
             Dictionary<string, List<string>> UserType = GetUserType();
 
@@ -270,7 +293,71 @@ namespace 德行成績試算表
                 }
             }
 
-            BGW.ReportProgress(35, "取得缺曠資料");
+
+            BGW.ReportProgress(35, "取得幹部資料");
+
+            #region 取得幹部資料
+            Dictionary<string, List<string>> cardeDic = new Dictionary<string, List<string>>();
+
+            StringBuilder sb_carde = new StringBuilder();
+            sb_carde.Append(string.Format(@"
+SELECT 
+    studentid, 
+    cadrename
+FROM 
+    $behavior.thecadre AS cadre
+JOIN 
+    student 
+    ON student.id::varchar = cadre.studentid
+WHERE 
+    schoolyear = '{0}' 
+    AND semester = '{1}';", _Schoolyear, _Semester));
+
+            dt = _QueryHelper.Select(sb_carde.ToString());
+            foreach (DataRow row in dt.Rows)
+            {
+                string ref_student_id = "" + row["studentid"];
+                string cadrename = "" + row["cadrename"];
+                if (!cardeDic.ContainsKey(ref_student_id))
+                {
+                    cardeDic.Add(ref_student_id, new List<string>());
+                }
+                cardeDic[ref_student_id].Add(cadrename);
+            } 
+            #endregion
+
+            BGW.ReportProgress(35, "取得服務學習資料");
+
+            #region 取得服務學習資料
+            Dictionary<string, int> serviceDic = new Dictionary<string, int>();
+            StringBuilder sb_service = new StringBuilder();
+            sb_service.Append(string.Format(@"
+SELECT 
+  ref_student_id, 
+  SUM(hours) AS total_hours
+FROM 
+  $k12.service.learning.record
+WHERE 
+  school_year = {0}
+  AND semester = {1}
+GROUP BY 
+  ref_student_id;", _Schoolyear, _Semester));
+
+            dt = _QueryHelper.Select(sb_service.ToString());
+            foreach (DataRow row in dt.Rows)
+            {
+                int service = 0;
+                string ref_student_id = "" + row["ref_student_id"];
+                int.TryParse("" + row["total_hours"], out service);
+                if (!serviceDic.ContainsKey(ref_student_id))
+                {
+                    serviceDic.Add(ref_student_id, service);
+                }
+            } 
+            #endregion
+
+            BGW.ReportProgress(40, "取得缺曠資料");
+
             #region 缺曠
             foreach (SHAttendanceRecord each in SHAttendance.SelectByStudentIDs(StudentIDList))
             {
@@ -318,7 +405,7 @@ namespace 德行成績試算表
             #endregion
 
             //日常表現資料
-            BGW.ReportProgress(40, "取得日常表現");
+            BGW.ReportProgress(45, "取得日常表現");
             Dictionary<string, SHMoralScoreRecord> SHMoralScoreDic = new Dictionary<string, SHMoralScoreRecord>();
             foreach (SHMoralScoreRecord each in SHMoralScore.Select(null, StudentIDList, _Schoolyear, _Semester))
             {
@@ -329,7 +416,7 @@ namespace 德行成績試算表
             }
 
             //文字評量對照表
-            BGW.ReportProgress(45, "取得文字評量");
+            BGW.ReportProgress(50, "取得文字評量");
             List<string> TextScoreList = new List<string>();
             SmartSchool.Customization.Data.SystemInformation.getField("文字評量對照表");
             System.Xml.XmlElement ElmTextScoreList = (System.Xml.XmlElement)SmartSchool.Customization.Data.SystemInformation.Fields["文字評量對照表"];
@@ -345,7 +432,7 @@ namespace 德行成績試算表
             BGW.ReportProgress(50, "產生報表樣式");
 
             //單頁範本
-            Document _template = new Document(new MemoryStream(Properties.Resources.高中_日常生活表現_班級_a3));
+            Document _template = new Document(Template);
 
             Dictionary<string, List<string>> periodAbsence = new Dictionary<string, List<string>>();
 
@@ -415,13 +502,13 @@ namespace 德行成績試算表
 
             #region 填入表格
 
-            BGW.ReportProgress(53, "填入報表資料");
+            BGW.ReportProgress(55, "填入報表資料");
 
 
             int index = 0;
             int classTotalRow = maxStudents + 5;
 
-            BGW.ReportProgress(57, "填入老師姓名");
+            BGW.ReportProgress(58, "填入老師姓名");
             #region 取得全校班級,與老師姓名/暱稱(2012/5/24)
             Dictionary<string, string> TeacherDic = new Dictionary<string, string>();
             string st = "SELECT class.id,teacher.teacher_name,teacher.nickname FROM class JOIN teacher ON class.ref_teacher_id = teacher.id";
@@ -443,7 +530,7 @@ namespace 德行成績試算表
 
             #endregion
 
-            BGW.ReportProgress(61, "學生留察資料");
+            BGW.ReportProgress(63, "學生留察資料");
             #region 取得全校本學年度留查之記錄(2012/5/24)
             List<string> MeritFlagIs2 = new List<string>();
             st = string.Format("SELECT ref_student_id from discipline where merit_flag=2 and school_year={0} and semester={1}", _Schoolyear, _Semester);
@@ -623,8 +710,29 @@ namespace 德行成績試算表
                         valueList.Add("0");
                     }
 
-                    //文字評量部份
-                    SHMoralScoreRecord demonScore;
+                    //幹部紀錄 cardeDic
+
+                    if (cardeDic.ContainsKey(aStudent.ID))
+                    {
+                        nameList.Add("幹部記錄" + aStudentIndex);
+                        valueList.Add(string.Join(",", cardeDic[aStudent.ID]));
+                    }
+
+                    //服務學習時數 serviceDic
+                    if (serviceDic.ContainsKey(aStudent.ID))
+                    {
+                        string serviceHours = "" + serviceDic[aStudent.ID];
+                        nameList.Add("服務學習時數" + aStudentIndex);
+                        valueList.Add(serviceHours);
+                    }
+                    else
+                    {
+                        nameList.Add("服務學習時數" + aStudentIndex);
+                        valueList.Add("0");
+                    }
+
+                        //文字評量部份
+                        SHMoralScoreRecord demonScore;
 
                     if (SHMoralScoreDic.ContainsKey(aStudent.ID))
                     {
@@ -645,7 +753,7 @@ namespace 德行成績試算表
                             }
                         }
 
-                        //導師評語
+                        //導師評語(舊)
                         nameList.Add("導師評語" + aStudentIndex);
                         valueList.Add(demonScore.Comment);
                     }
@@ -653,7 +761,7 @@ namespace 德行成績試算表
                     //留察
                     if (MeritFlagIs2.Contains(aStudent.ID))
                     {
-                        nameList.Add("是否留察" + aStudentIndex);
+                        nameList.Add("留察" + aStudentIndex);
                         valueList.Add("是");
                     }
 
@@ -704,16 +812,6 @@ namespace 德行成績試算表
             FormStop = true;
         }
 
-        //紙張設定
-        private int GetSizeIndex()
-        {
-            Campus.Configuration.ConfigData cd = Campus.Configuration.Config.User[ConfigPrint];
-            string config = cd["紙張設定"];
-            int x = 0;
-            int.TryParse(config, out x);
-            return x; //如果是數值就回傳,如果不是回傳預設
-        }
-
         private int SortStudent(StudentRecord sr1, StudentRecord sr2)
         {
             int srr1 = sr1.SeatNo.HasValue ? sr1.SeatNo.Value : 0;
@@ -758,8 +856,50 @@ namespace 德行成績試算表
         /// </summary>
         private void linkPrint_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            SelectPrintSizeForm config = new SelectPrintSizeForm(ConfigPrint);
-            config.ShowDialog();
+            SettingForm sf = new SettingForm(ConfigName, _useDefaultTemplate, _buffer);
+
+            if (sf.ShowDialog() == DialogResult.OK)
+            {
+                LoadPreference();
+            }
+        }
+
+        private void LoadPreference()
+        {
+            #region 讀取 Preference
+
+            cd = K12.Data.School.Configuration[ConfigName];
+
+            XmlElement config = cd.GetXml("XmlData", null);
+
+            if (config != null)
+            {
+                _useDefaultTemplate = config.GetAttribute("Default");
+                XmlElement customize = (XmlElement)config.SelectSingleNode("CustomizeTemplate");
+
+                if (customize != null)
+                {
+                    string templateBase64 = customize.InnerText;
+                    _buffer = Convert.FromBase64String(templateBase64);
+                    _template = new MemoryStream(_buffer);
+                }
+            }
+            else
+            {
+                #region 產生空白設定檔
+                config = new XmlDocument().CreateElement("日常生活表現總表_班級");
+                config.SetAttribute("Default", "範本1");
+                XmlElement customize = config.OwnerDocument.CreateElement("CustomizeTemplate");
+                config.AppendChild(customize);
+                cd.SetXml("XmlData", config);
+                _useDefaultTemplate = "範本1";
+
+                #endregion
+            }
+
+            cd.Save(); //儲存組態資料。
+
+            #endregion
         }
 
         /// <summary>
@@ -786,29 +926,6 @@ namespace 德行成績試算表
         private void btnExit_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Title = "另存新檔";
-            sfd.FileName = string.Format("日常生活表現_班級_功能變數總表_{0}.docx", DateTime.Now.ToString("HHmmss"));
-            sfd.Filter = "Word檔案 (*.docx)|*.docx|所有檔案 (*.*)|*.*";
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    FileStream fs = new FileStream(sfd.FileName, FileMode.Create);
-                    fs.Write(Properties.Resources.日常生活表現總表_功能變數總表, 0, Properties.Resources.日常生活表現總表_功能變數總表.Length);
-                    fs.Close();
-                    System.Diagnostics.Process.Start(sfd.FileName);
-                }
-                catch
-                {
-                    FISCA.Presentation.Controls.MsgBox.Show("指定路徑無法存取。", "另存檔案失敗", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-            }
         }
     }
 }
