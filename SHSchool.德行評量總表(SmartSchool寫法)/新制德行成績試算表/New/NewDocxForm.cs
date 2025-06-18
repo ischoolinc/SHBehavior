@@ -37,6 +37,8 @@ namespace 德行成績試算表
         /// </summary>
         SmartSchool.ePaper.ElectronicPaper paperForClass { get; set; }
 
+        XmlElement config { get; set; }
+
         bool Carty_paper = false;
 
         int _Schoolyear = 110;
@@ -53,6 +55,8 @@ namespace 德行成績試算表
         BackgroundWorker BGW;
 
         string ConfigName = "日常生活表現總表.班級.2025";
+
+        string[] selectedFaceArray;
 
         private string _useDefaultTemplate = "範本1";
         private byte[] _buffer = null;
@@ -323,7 +327,7 @@ WHERE
                     cardeDic.Add(ref_student_id, new List<string>());
                 }
                 cardeDic[ref_student_id].Add(cadrename);
-            } 
+            }
             #endregion
 
             BGW.ReportProgress(35, "取得服務學習資料");
@@ -353,7 +357,7 @@ GROUP BY
                 {
                     serviceDic.Add(ref_student_id, service);
                 }
-            } 
+            }
             #endregion
 
             BGW.ReportProgress(40, "取得缺曠資料");
@@ -420,9 +424,24 @@ GROUP BY
             List<string> TextScoreList = new List<string>();
             SmartSchool.Customization.Data.SystemInformation.getField("文字評量對照表");
             System.Xml.XmlElement ElmTextScoreList = (System.Xml.XmlElement)SmartSchool.Customization.Data.SystemInformation.Fields["文字評量對照表"];
-            foreach (System.Xml.XmlNode Node in ElmTextScoreList.SelectNodes("Content/Morality"))
+
+            // 取得儲存的選擇清單
+            XmlElement selectedFaces = config.SelectSingleNode("SelectedFaces") as XmlElement;
+            if (selectedFaces != null)
             {
-                TextScoreList.Add(Node.Attributes["Face"].InnerText);
+                string selectedFacesValue = selectedFaces.InnerText;
+                if (!string.IsNullOrEmpty(selectedFacesValue))
+                {
+                    string[] selectedFaceArray = selectedFacesValue.Split(',');
+                    foreach (System.Xml.XmlNode Node in ElmTextScoreList.SelectNodes("Content/Morality"))
+                    {
+                        string faceValue = Node.Attributes["Face"].InnerText;
+                        if (selectedFaceArray.Contains(faceValue))
+                        {
+                            TextScoreList.Add(faceValue);
+                        }
+                    }
+                }
             }
 
             #endregion
@@ -474,19 +493,6 @@ GROUP BY
                 }
                 varIndex++;
             }
-
-            //foreach (string period in periodAbsence.Keys)
-            //{
-            //    prototypeSheet.Cells.CreateRange(2, ptColIndex, 2, periodAbsence[period].Count).Merge();
-            //    prototypeSheet.Cells[2, ptColIndex].PutValue(period);
-            //
-            //    foreach (string absence in periodAbsence[period])
-            //    {
-            //        prototypeSheet.Cells[4, ptColIndex].PutValue(absence);
-            //        columnIndexTable.Add(period + absence, ptColIndex);
-            //        ptColIndex++;
-            //    }
-            //}
 
             //文字評量
             int textscoreIndex = 1;
@@ -731,8 +737,8 @@ GROUP BY
                         valueList.Add("0");
                     }
 
-                        //文字評量部份
-                        SHMoralScoreRecord demonScore;
+                    //文字評量部份
+                    SHMoralScoreRecord demonScore;
 
                     if (SHMoralScoreDic.ContainsKey(aStudent.ID))
                     {
@@ -745,11 +751,13 @@ GROUP BY
                         {
                             string strFace = each.GetAttribute("Face");
 
+                            // 檢查 Face 是否在 SelectedFaces 中
                             if (TextScoreList.Contains(strFace))
                             {
                                 nameList.Add("評語" + demonScoreIndex + "學生" + aStudentIndex);
                                 valueList.Add(each.InnerText);
                                 demonScoreIndex++;
+
                             }
                         }
 
@@ -870,7 +878,7 @@ GROUP BY
 
             cd = K12.Data.School.Configuration[ConfigName];
 
-            XmlElement config = cd.GetXml("XmlData", null);
+            config = cd.GetXml("XmlData", null);
 
             if (config != null)
             {
@@ -883,6 +891,20 @@ GROUP BY
                     _buffer = Convert.FromBase64String(templateBase64);
                     _template = new MemoryStream(_buffer);
                 }
+
+                // 檢查 SelectedFaces 節點是否存在
+                if (config.SelectSingleNode("SelectedFaces") == null)
+                {
+                    XmlElement selectedFaces = config.OwnerDocument.CreateElement("SelectedFaces");
+                    config.AppendChild(selectedFaces);
+
+                    foreach (System.Xml.XmlNode Node in selectedFaces.SelectNodes("Content/Morality"))
+                    {
+                        string faceValue = Node.Attributes["Face"].InnerText;
+                        selectedFaceArray = faceValue.Split(',');
+                    }
+
+                }
             }
             else
             {
@@ -891,6 +913,11 @@ GROUP BY
                 config.SetAttribute("Default", "範本1");
                 XmlElement customize = config.OwnerDocument.CreateElement("CustomizeTemplate");
                 config.AppendChild(customize);
+
+                // 新增 SelectedFaces 節點
+                XmlElement selectedFaces = config.OwnerDocument.CreateElement("SelectedFaces");
+                config.AppendChild(selectedFaces);
+
                 cd.SetXml("XmlData", config);
                 _useDefaultTemplate = "範本1";
 

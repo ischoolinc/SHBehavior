@@ -33,6 +33,47 @@ namespace 德行成績試算表
             _ConfigName = configName;
             _useDefaultTemplate = useDefaultTemplate;
 
+            FISCA.Data.QueryHelper _q = new FISCA.Data.QueryHelper();
+            DataTable dt =  _q.Select("select content from list where name='文字評量代碼表'");
+
+            //<Request>
+            //    <Content>
+            //        <Morality Face="日常生活表現及校內外特殊表現">
+            //            <Item Code="001" Comment="品學兼優" />
+            //            <Item Code="142" Comment="尚知愛好" />
+            //            <Item Code="241" Comment="無理取鬧" />
+            //        </Morality>
+            //        <Morality Face="具體建議">
+            //            <Item Code="001" Comment="品學兼優" />
+            //            <Item Code="002" Comment="名列前茅" />
+            //            <Item Code="003" Comment="熱心公務" />
+            //        </Morality>
+            //    </Content>
+            //</Request>
+
+            string content = "" + dt.Rows[0][0];
+
+            // 解析 XML 內容
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(content);
+            
+            // 清空 ListViewEx1
+            listViewEx1.Items.Clear();
+            
+            // 取得所有 Morality 節點
+            XmlNodeList moralityNodes = doc.SelectNodes("//Morality");
+            foreach (XmlNode node in moralityNodes)
+            {
+                // 取得 Face 屬性
+                string face = node.Attributes["Face"].Value;
+                
+                // 建立新的 ListViewItem
+                ListViewItem item = new ListViewItem(face);
+                
+                // 加入到 ListViewEx1
+                listViewEx1.Items.Add(item);
+            }
+
             if (buffer != null)
                 _buffer = buffer;
 
@@ -62,6 +103,26 @@ namespace 德行成績試算表
                     _buffer = Convert.FromBase64String(templateBase64);
                     _template = new MemoryStream(_buffer);
                 }
+
+                // 讀取選擇的 Face 設定
+                XmlElement selectedFaces = (XmlElement)config.SelectSingleNode("SelectedFaces");
+                if (selectedFaces != null)
+                {
+                    string selectedFacesValue = selectedFaces.InnerText;
+                    if (!string.IsNullOrEmpty(selectedFacesValue))
+                    {
+                        // 將儲存的字串分割成陣列
+                        string[] selectedFaceArray = selectedFacesValue.Split(',');
+                        // 在 ListViewEx1 中尋找並設定勾選狀態
+                        foreach (ListViewItem item in listViewEx1.Items)
+                        {
+                            if (selectedFaceArray.Contains(item.Text))
+                            {
+                                item.Checked = true;
+                            }
+                        }
+                    }
+                }
             }
             else
             {
@@ -70,6 +131,10 @@ namespace 德行成績試算表
                 config.SetAttribute("Default", "範本1");
                 XmlElement customize = config.OwnerDocument.CreateElement("CustomizeTemplate");
                 config.AppendChild(customize);
+
+                // 新增 SelectedFaces 節點
+                XmlElement selectedFaces = config.OwnerDocument.CreateElement("SelectedFaces");
+                config.AppendChild(selectedFaces);
 
                 cd.SetXml("XmlData", config);
 
@@ -81,7 +146,6 @@ namespace 德行成績試算表
             cd.Save(); //儲存組態資料。
 
             #endregion
-
         }
 
         private void linkDef1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -210,8 +274,6 @@ namespace 德行成績試算表
             ConfigData cd = K12.Data.School.Configuration[_ConfigName];
             XmlElement config = cd.GetXml("XmlData", null);
 
-            //XmlElement config = CurrentUser.Instance.Preference["懲戒通知單"];
-
             if (config == null)
             {
                 config = new XmlDocument().CreateElement("日常生活表現總表_班級");
@@ -221,11 +283,32 @@ namespace 德行成績試算表
 
             XmlElement customize = config.OwnerDocument.CreateElement("CustomizeTemplate");
           
-
             if (_isUpload) //如果是自訂範本
             {
                 customize.InnerText = base64;
                 config.ReplaceChild(customize, config.SelectSingleNode("CustomizeTemplate"));
+            }
+
+            // 儲存選擇的 Faces
+            XmlElement selectedFaces = (XmlElement)config.SelectSingleNode("SelectedFaces");
+            if (selectedFaces == null)
+            {
+                selectedFaces = config.OwnerDocument.CreateElement("SelectedFaces");
+                config.AppendChild(selectedFaces);
+            }
+            
+            // 取得 ListViewEx1 中所有勾選的項目
+            if (listViewEx1.CheckedItems.Count > 0)
+            {
+                // 將所有勾選的項目文字以逗號分隔
+                string selectedFacesValue = string.Join(",", 
+                    listViewEx1.CheckedItems.Cast<ListViewItem>()
+                    .Select(item => item.Text));
+                selectedFaces.InnerText = selectedFacesValue;
+            }
+            else
+            {
+                selectedFaces.InnerText = string.Empty;
             }
 
             cd.SetXml("XmlData", config);
@@ -288,6 +371,15 @@ namespace 德行成績試算表
             {
                 //radioButton1.Checked = false;
                 _useDefaultTemplate = "自訂範本";
+            }
+        }
+
+        private void checkBoxX1_CheckedChanged(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewEx1.Items)
+            {
+                    item.Checked = checkBoxX1.Checked;
+
             }
         }
     }
